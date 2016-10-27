@@ -1,24 +1,143 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
+.controller('AppCtrl', function($scope, $timeout) {
+  $scope.usuario = firebase.auth().currentUser;
 })
 
-.controller('PlaylistsCtrl', function($scope) {
+.controller('SalaDesafiosCtrl', function($scope, $state, $timeout) {
+  var usuarioLogeado = firebase.auth().currentUser;
+  $scope.usuario = {};
+  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+  referenciaUsuario.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.usuario = snapshot.val();
+    });
+  });
 
+  $scope.desafios = [];
+
+  var referenciaDesafios = firebase.database().ref('desafio/');
+  referenciaDesafios.on('child_added', function (snapshot) {
+    $timeout(function() {
+      $scope.desafios.push(snapshot.val());
+    });
+  });
+
+  $scope.NuevoDesafio = function(){
+    $state.go('app.desafio');
+  }
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('PerfilCtrl', function($scope, $stateParams, $timeout) {
+  var usuarioLogeado = firebase.auth().currentUser;
+  $scope.usuario = {};
+  var referencia = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+  referencia.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.usuario = snapshot.val();
+      $scope.usuarioReserva = {};
+      var referenciaReserva = firebase.database().ref('reserva/' + $scope.usuario.nombre);
+      referenciaReserva.on('value', function(snapshot) {
+        $timeout(function() {
+          if (snapshot.val() != null)
+            {
+              $scope.usuarioReserva = snapshot.val();
+              $scope.usuario.saldo = parseInt($scope.usuario.saldo) - parseInt($scope.usuarioReserva.monto);
+            }
+        });
+      });
+    });
+  });
 })
 
-.controller('LoginCtrl', function($scope, $stateParams, $timeout) {
+.controller('DesafioCtrl', function($scope, $stateParams, $timeout, $state) {
+  var usuarioLogeado = firebase.auth().currentUser;
+  $scope.usuario = {};
+  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+  referenciaUsuario.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.usuario = snapshot.val();
+    });
+  });
+
+  $scope.usuarioReserva = {};
+  $scope.usuarioReserva.nombre = usuarioLogeado.displayName;
+  $scope.usuarioReserva.monto = 0;
+  var referenciaReserva = firebase.database().ref('reserva/' + usuarioLogeado.displayName);
+  referenciaReserva.on('value', function(snapshot) {
+    $timeout(function() {
+      if (snapshot.val() != null)
+        $scope.usuarioReserva = snapshot.val();
+    });
+  });
+
+  $scope.desafio = {};
+
+  $scope.Guardar = function(){
+      var fecha = firebase.database.ServerValue.TIMESTAMP;
+      firebase.database().ref('desafio/' + $scope.desafio.titulo).set({
+        titulo: $scope.desafio.titulo,
+        descripcion: $scope.desafio.descripcion,
+        apuesta: $scope.desafio.apuesta,
+        vencimiento: $scope.desafio.vencimiento,
+        aceptada: false,
+        finalizada: false,
+        usuarioCreador: $scope.usuario.nombre,
+        fechaCreacion: fecha
+      });
+
+      console.log($scope.usuarioReserva.monto);
+
+      firebase.database().ref('reserva/' + $scope.usuario.nombre).set({
+        usuario: $scope.usuario.nombre,
+        monto: parseInt($scope.usuarioReserva.monto) + parseInt($scope.desafio.apuesta)
+      });
+
+      $state.go('app.salaDesafios');
+  }
+  
+})
+
+.controller('DesafioVerCtrl', function($scope, $stateParams, $timeout, $state) {
+  var usuarioLogeado = firebase.auth().currentUser;
+  $scope.usuario = {};
+  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+  referenciaUsuario.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.usuario = snapshot.val();
+    });
+  });
+
+  $scope.desafio = {};
+
+  var referenciaDesafios = firebase.database().ref('desafio/' + $stateParams.titulo);
+  referenciaDesafios.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.desafio = snapshot.val();
+    });
+  });
+
+  $scope.Aceptar = function(){
+      var updates = {};
+      updates['/desafio/' + $stateParams.titulo + '/aceptada'] = true;
+      updates['/desafio/' + $stateParams.titulo + '/usuarioAcepta'] = $scope.usuario.nombre;
+
+      firebase.database().ref().update(updates);
+  }
+
+  $scope.Volver = function(){
+    $state.go('app.salaDesafios');
+  }
+  
+})
+
+.controller('LoginCtrl', function($scope, $stateParams, $timeout, $state) {
   $scope.logueado = 'no';
   $scope.verificado = 'no';
 
   $scope.login = {};
   $scope.login.usuario = "m.mirotta@gmail.com";
   $scope.login.clave = "123456";
-  $scope.login.nombre = "Juan Perez";
 
   $scope.Logear = function (){
     firebase.auth().signInWithEmailAndPassword($scope.login.usuario, $scope.login.clave).catch(function (error){
@@ -26,12 +145,25 @@ angular.module('starter.controllers', [])
       console.info("Error", error);
     }).then( function(resultado){
 
+      var usuario = firebase.auth().currentUser;
+
+      var updates = {};
+      updates['/usuario/' + usuario.displayName + '/fechaAcceso'] = firebase.database.ServerValue.TIMESTAMP;;
+
+      firebase.database().ref().update(updates);
+
       $timeout(function() {
         $scope.logueado = 'si';
         if (resultado.emailVerified == false)
-          $scope.verificado = 'si';
-        else
+        {
           $scope.verificado = 'no';
+        }
+        else
+        {
+          $scope.verificado = 'si';
+          $state.go('app.perfil');
+        }
+
 
       });
       console.info("login correcto", resultado);
@@ -68,39 +200,6 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.VerificarMail = function (){
-    firebase.auth().currentUser.sendEmailVerification().then(function(resultado){
-      console.info("verifico el usuario correcto", resultado);
-    }).catch(function (error){
-      console.info("verifico el usuario incorrecto", error);
-    });
-  };
-
-  $scope.Registrar = function (){
-    firebase.auth().createUserWithEmailAndPassword($scope.login.usuario, $scope.login.clave).then(function(resultado){
-
-      firebase.database().ref('usuario/' + $scope.login.nombre).set({
-        correo: $scope.login.usuario,
-        nombre: $scope.login.nombre
-      });
-
-      $timeout(function() {
-        $scope.logueado = 'si';
-        if (resultado.emailVerified == false)
-          $scope.verificado = 'si';
-        else
-          $scope.verificado = 'no';
-
-      });
-      console.info("registrar el usuario correcto", resultado);
-    },function (error){
-      if(error.code == "auth/email-already-in-use")
-        $scope.errorMensaje = "El email ya esta registrado";
-
-      console.info("registrar el usuario incorrecto", error);
-    });
-  };
-
   $scope.LoginGitHub = function (){
     var provider = new firebase.auth.GithubAuthProvider();
     provider.addScope('repo');
@@ -127,4 +226,41 @@ angular.module('starter.controllers', [])
     });
   };
 
+})
+
+.controller('RegistroCtrl', function($scope, $stateParams, $timeout) {
+  $scope.login = {};
+  $scope.login.usuario = "jperez@gmail.com";
+  $scope.login.clave = "123456";
+  $scope.login.nombre = "Juan Perez";
+
+  $scope.Registrar = function (){
+    firebase.auth().createUserWithEmailAndPassword($scope.login.usuario, $scope.login.clave).then(function(resultado){
+      var fecha = firebase.database.ServerValue.TIMESTAMP;
+      firebase.database().ref('usuario/' + $scope.login.nombre).set({
+        correo: $scope.login.usuario,
+        nombre: $scope.login.nombre,
+        saldo: "1000",
+        fechaCreacion: fecha,
+        fechaAcceso: fecha
+      });
+      firebase.auth().signInWithEmailAndPassword($scope.login.usuario, $scope.login.clave).catch(function (error){
+
+      }).then( function(resultado){
+        firebase.auth().currentUser.updateProfile({
+          displayName: $scope.login.nombre,
+        }).then(function() {
+
+        }, function(error) {
+          // An error happened.
+        });
+      });
+
+    },function (error){
+      if(error.code == "auth/email-already-in-use")
+        $scope.errorMensaje = "El email ya esta registrado";
+
+      console.info("registrar el usuario incorrecto", error);
+    });
+  };
 });

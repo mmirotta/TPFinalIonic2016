@@ -1,11 +1,7 @@
 <ion-view view-title="Login">
   <ion-content>
-    <form>
+   <form>
       <div class="list" ng-if="logueado == 'no'">
-        <label class="item item-input">
-          <span class="input-label">Nombre</span>
-          <input type="text" ng-model="login.nombre">
-        </label>
         <label class="item item-input">
           <span class="input-label">Correo</span>
           <input type="text" ng-model="login.usuario">
@@ -14,16 +10,15 @@
           <span class="input-label">Contraseña</span>
           <input type="password" ng-model="login.clave">
         </label>
-        <label class="item item-input">
-          <span class="input-label">Edad</span>
-          <input type="text" ng-model="login.Edad">
-        </label>
         <div class="padding">
           <button class="button button-block button-positive" ng-click="Logear()" >Log In</button>
-          <button class="button button-block button-positive" ng-click="Resetear()" >Olvide mi contraseña</button>
-          <button class="button button-block button-positive" ng-click="Registrar()" >Registrame</button>
           <button class="button button-block button-positive" ng-click="LoginGitHub()" >Login con GitHub</button>
-          <button class="button button-block button-positive" ng-click="Completar()" >Completar Datos</button>
+          <p class="text-center text-muted">
+            <small><a ng-click="Resetear()">Olvide mi contraseña</a></small>
+          </p>
+          <p class="text-center text-muted">
+            <small>No tienes una cuenta? <a ui-sref="registro">Registrate</a></small>
+          </p>
         </div>
         <label class="item item-input">
           <span class="input-label" style="color:red">{{errorMensaje}}</span>
@@ -31,7 +26,7 @@
       </div>
       <div class="list" ng-if="logueado == 'si'">
         <div class="padding">
-        <button class="button button-block button-positive" ng-if="verificado == 'si'" ng-click="VerificarMail()">Verificar Mail</button>
+        <button class="button button-block button-positive" ng-if="verificado == 'no'" ng-click="VerificarMail()">Verificar Mail</button>
           <button class="button button-block button-positive" ng-click="Deslogear()" >Log Out</button>
         </div>
       </div>

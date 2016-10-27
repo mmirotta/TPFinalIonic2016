@@ -1,0 +1,26 @@
+<ion-view view-title="Registro">
+  <ion-content>
+    <form>
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Nombre</span>
+          <input type="text" ng-model="login.nombre">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Correo</span>
+          <input type="text" ng-model="login.usuario">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Contraseña</span>
+          <input type="password" ng-model="login.clave">
+        </label>
+        <div class="padding">
+          <button class="button button-block button-positive" ng-click="Registrar()" >Registrame</button>
+        </div>
+        <label class="item item-input">
+          <span class="input-label" style="color:red">{{errorMensaje}}</span>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

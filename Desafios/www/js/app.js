@@ -32,52 +32,57 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('app.login', {
+  .state('login', {
     url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
+  .state('registro', {
+    url: '/registro',
+    templateUrl: 'templates/registro.html',
+    controller: 'RegistroCtrl'
+  })
+
+  .state('app.perfil', {
+    url: '/perfil',
     views: {
       'menuContent': {
-        templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
+        templateUrl: 'templates/perfil.html',
+        controller: 'PerfilCtrl'
       }
     }
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.desafio', {
+    url: '/desafio',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/desafio.html',
+        controller: 'DesafioCtrl'
       }
     }
   })
 
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
+  .state('app.desafioVer', {
+    url: '/desafioVer/:titulo',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        templateUrl: 'templates/desafioVer.html',
+        controller: 'DesafioVerCtrl'
       }
     }
+  })
+
+  .state('app.salaDesafios', {
+      url: '/salaDesafios',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/salaDesafios.html',
+          controller: 'SalaDesafiosCtrl'
+        }
+      }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/login');
 });
