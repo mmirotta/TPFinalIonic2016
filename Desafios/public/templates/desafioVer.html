@@ -1,0 +1,35 @@
+<ion-view view-title="Desafío: {{desafio.titulo}}">
+  <ion-content>
+  	<div class="list">
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Descripción</span>
+			<p>{{desafio.descripcion}}</p>
+		</label>
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Apuesta</span>
+			<span >{{desafio.apuesta}}</span>
+		</label>
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Finaliza en:<span style="font-size:10px">(hs)</span></span>
+			<span>{{desafio.vencimiento}}</span>
+		</label>
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Creador:</span>
+			<span>{{desafio.usuarioCreador.nombre}}</span>
+		</label>
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Desafiante:</span>
+			<span ng-if="desafio.usuarioAcepta.nombre != 'false'">{{desafio.usuarioAcepta.nombre}}</span>
+		</label>
+		<div class="padding">
+			<div class="button-bar">
+				<button class="button button-balanced" style="margin-right:2%" ng-click="Aceptar()" ng-if="(!desafio.aceptada) && (usuario.nombre != desafio.usuarioCreador.nombre) && (desafio.pagina == 'salaDesafios')">Aceptar</button>
+				<button class="button button-assertive" style="margin-left:2%" ng-click="Volver()">Volver</button>
+			</div>
+		</div>
+		<div class="padding" ng-if="mensaje.ver">
+			<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+		</div>
+	</div>
+  </ion-content>
+</ion-view>
