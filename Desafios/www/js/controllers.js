@@ -19,12 +19,52 @@ angular.module('starter.controllers', [])
   var referenciaDesafios = firebase.database().ref('desafio/');
   referenciaDesafios.on('child_added', function (snapshot) {
     $timeout(function() {
-      $scope.desafios.push(snapshot.val());
+      var desafio = snapshot.val();
+      desafio.pagina = "salaDesafios";
+      if (desafio.aceptada == false && desafio.finalizada == false) 
+        $scope.desafios.push(desafio);
     });
   });
 
   $scope.NuevoDesafio = function(){
     $state.go('app.desafio');
+  }
+
+  $scope.VerDesafio = function(desafio){
+    var param = JSON.stringify(desafio);
+    $state.go('app.desafioVer', {desafio:param});
+  }
+})
+
+.controller('MisDesafiosCtrl', function($scope, $state, $timeout) {
+  var usuarioLogeado = firebase.auth().currentUser;
+  $scope.usuario = {};
+  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+  referenciaUsuario.on('value', function(snapshot) {
+    $timeout(function() {
+      $scope.usuario = snapshot.val();
+    });
+  });
+
+  $scope.desafios = [];
+
+  var referenciaDesafios = firebase.database().ref('desafio/');
+  referenciaDesafios.on('child_added', function (snapshot) {
+    $timeout(function() {
+      var desafio = snapshot.val();
+      desafio.pagina = "misDesafios";
+      if (desafio.usuarioCreador.nombre == $scope.usuario.nombre || desafio.usuarioAcepta.nombre == $scope.usuario.nombre)
+        $scope.desafios.push(desafio);
+    });
+  });
+
+  $scope.NuevoDesafio = function(){
+    $state.go('app.desafio');
+  }
+
+  $scope.VerDesafio = function(desafio){
+    var param = JSON.stringify(desafio);
+    $state.go('app.desafioVer', {desafio:param});
   }
 })
 
@@ -72,6 +112,8 @@ angular.module('starter.controllers', [])
   });
 
   $scope.desafio = {};
+  $scope.desafio.apuesta = 10;
+  $scope.desafio.vencimiento = 1;
 
   $scope.Guardar = function(){
       var fecha = firebase.database.ServerValue.TIMESTAMP;
@@ -82,15 +124,15 @@ angular.module('starter.controllers', [])
         vencimiento: $scope.desafio.vencimiento,
         aceptada: false,
         finalizada: false,
-        usuarioCreador: $scope.usuario.nombre,
+        usuarioCreador: {nombre:$scope.usuario.nombre, correo:$scope.usuario.correo},
+        usuarioAcepta: {nombre:false, correo:false},
         fechaCreacion: fecha
       });
 
       console.log($scope.usuarioReserva.monto);
 
-      firebase.database().ref('reserva/' + $scope.usuario.nombre).set({
-        usuario: $scope.usuario.nombre,
-        monto: parseInt($scope.usuarioReserva.monto) + parseInt($scope.desafio.apuesta)
+      firebase.database().ref('reserva/' + $scope.usuario.nombre + '/' + $scope.desafio.titulo).set({
+        usuario: $scope.usuario.nombre, monto: parseInt($scope.desafio.apuesta), vencido: false
       });
 
       $state.go('app.salaDesafios');
@@ -101,6 +143,8 @@ angular.module('starter.controllers', [])
 .controller('DesafioVerCtrl', function($scope, $stateParams, $timeout, $state) {
   var usuarioLogeado = firebase.auth().currentUser;
   $scope.usuario = {};
+  $scope.mensaje = {};
+  $scope.mensaje.ver = false;
   var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
   referenciaUsuario.on('value', function(snapshot) {
     $timeout(function() {
@@ -109,24 +153,29 @@ angular.module('starter.controllers', [])
   });
 
   $scope.desafio = {};
-
-  var referenciaDesafios = firebase.database().ref('desafio/' + $stateParams.titulo);
-  referenciaDesafios.on('value', function(snapshot) {
-    $timeout(function() {
-      $scope.desafio = snapshot.val();
-    });
-  });
-
+  $scope.desafio = JSON.parse($stateParams.desafio);
   $scope.Aceptar = function(){
       var updates = {};
-      updates['/desafio/' + $stateParams.titulo + '/aceptada'] = true;
-      updates['/desafio/' + $stateParams.titulo + '/usuarioAcepta'] = $scope.usuario.nombre;
-
+      updates['/desafio/' + $scope.desafio.titulo + '/aceptada'] = true;
+      updates['/desafio/' + $scope.desafio.titulo + '/usuarioAcepta'] = {nombre:$scope.usuario.nombre, correo:$scope.usuario.correo};
+      updates['/desafio/' + $scope.desafio.titulo + '/fechaAceptada'] = firebase.database.ServerValue.TIMESTAMP;
+      
       firebase.database().ref().update(updates);
+
+      firebase.database().ref('reserva/' + $scope.usuario.nombre + '/' + $scope.desafio.titulo).set({
+        usuario: $scope.usuario.nombre, monto: parseInt($scope.desafio.apuesta), vencido: false
+      });
+
+      $scope.mensaje.ver = true;
+      $scope.mensaje.mensaje = "Has aceptado la apuesta, suerte.";
   }
 
   $scope.Volver = function(){
-    $state.go('app.salaDesafios');
+    console.info($scope.desafio);
+    if ($scope.desafio.pagina == "salaDesafios")
+      $state.go('app.salaDesafios');
+    else if ($scope.desafio.pagina == "misDesafios")
+      $state.go('app.misDesafios');
   }
   
 })
@@ -148,7 +197,7 @@ angular.module('starter.controllers', [])
       var usuario = firebase.auth().currentUser;
 
       var updates = {};
-      updates['/usuario/' + usuario.displayName + '/fechaAcceso'] = firebase.database.ServerValue.TIMESTAMP;;
+      updates['/usuario/' + usuario.displayName + '/fechaAcceso'] = firebase.database.ServerValue.TIMESTAMP;
 
       firebase.database().ref().update(updates);
 
@@ -163,11 +212,7 @@ angular.module('starter.controllers', [])
           $scope.verificado = 'si';
           $state.go('app.perfil');
         }
-
-
       });
-      console.info("login correcto", resultado);
-
     });
   };
 
@@ -228,7 +273,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('RegistroCtrl', function($scope, $stateParams, $timeout) {
+.controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state) {
   $scope.login = {};
   $scope.login.usuario = "jperez@gmail.com";
   $scope.login.clave = "123456";
@@ -242,15 +287,16 @@ angular.module('starter.controllers', [])
         nombre: $scope.login.nombre,
         saldo: "1000",
         fechaCreacion: fecha,
-        fechaAcceso: fecha
+        fechaAcceso: fecha,
+        perfil:"cliente"
       });
       firebase.auth().signInWithEmailAndPassword($scope.login.usuario, $scope.login.clave).catch(function (error){
 
       }).then( function(resultado){
         firebase.auth().currentUser.updateProfile({
           displayName: $scope.login.nombre,
-        }).then(function() {
-
+        }).then(function() {  
+          $state.go('app.perfil');
         }, function(error) {
           // An error happened.
         });

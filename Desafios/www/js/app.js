@@ -65,7 +65,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })
 
   .state('app.desafioVer', {
-    url: '/desafioVer/:titulo',
+    url: '/desafioVer/:desafio',
     views: {
       'menuContent': {
         templateUrl: 'templates/desafioVer.html',
@@ -80,6 +80,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         'menuContent': {
           templateUrl: 'templates/salaDesafios.html',
           controller: 'SalaDesafiosCtrl'
+        }
+      }
+  })
+
+  .state('app.misDesafios', {
+      url: '/misDesafios',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/misDesafios.html',
+          controller: 'MisDesafiosCtrl'
         }
       }
   });

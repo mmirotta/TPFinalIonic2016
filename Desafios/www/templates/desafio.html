@@ -1,22 +1,32 @@
 <ion-view view-title="Nuevo Desafío">
   <ion-content>
   	<div class="list">
-	  <label class="item item-input item-stacked-label">
-	    <span class="input-label">Título</span>
-	    <input type="text" ng-model="desafio.titulo" maxlength="25">
-	  </label>
-	  <label class="item item-input item-stacked-label">
-	    <span class="input-label">Descripción</span>
-	    <textarea ng-model="desafio.descripcion"></textarea>
-	  </label>
-	  <label class="item item-input item-stacked-label">
-	    <span class="input-label">Apuesta</span>
-	    <input type="number" ng-model="desafio.apuesta">
-	  </label>
-	  <label class="item item-input item-stacked-label">
-	    <span class="input-label">Finaliza en:<span style="font-size:10px">(hs)</span></span>
-	    <input type="number" ng-model="desafio.vencimiento">
-	  </label>
+	  	<label class="item item-input item-stacked-label">
+	    	<span class="input-label">Título</span>
+	    	<input type="text" ng-model="desafio.titulo" maxlength="25">
+	  	</label>
+	  	<label class="item item-input item-stacked-label">
+		    <span class="input-label">Descripción</span>
+		    <textarea ng-model="desafio.descripcion"></textarea>
+	  	</label>
+	  	<label class="item item-input item-stacked-label">
+		    <span class="input-label">Apuesta</span>
+		    <span>{{desafio.apuesta}}</span>
+   		</label>
+		<div class="item range range-positive">
+		    <span>1</span>
+		    <input type="range" name="apuesta" min="1" max="20" ng-model="desafio.apuesta">
+		    <span>20</span>
+		</div>
+	  	<label class="item item-input item-stacked-label">
+		    <span class="input-label">Finaliza en:<span style="font-size:10px">(hs)</span></span>
+		    <span>{{desafio.vencimiento}}</span>
+	  	</label>
+		<div class="item range range-positive">
+			<span>1</span>
+			<input type="range" name="vencimiento" min="1" max="24" ng-model="desafio.vencimiento">
+			<span>24</span>
+		</div>
 	  <div class="padding">
 	  	<button class="button button-block button-positive" ng-click="Guardar()">Generar</button>
 	  </div>
