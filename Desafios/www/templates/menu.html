@@ -25,7 +25,13 @@
           Mis Desafíos
         </ion-item>
         <ion-item menu-close href="#/app/perfil">
-          {{usuario.displayName}}
+          {{usuario.nombre}}
+        </ion-item>
+        <ion-item menu-close href="#/app/perfil" ng-if="usuario.perfil == 'admin'">
+          Verificar
+        </ion-item>
+        <ion-item menu-close href="#/app/listaUsuarios" ng-if="usuario.perfil == 'admin'">
+          Usuarios
         </ion-item>
         <ion-item menu-close href="#/login">
           Salir

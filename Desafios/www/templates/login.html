@@ -1,6 +1,6 @@
 <ion-view view-title="Login">
   <ion-content>
-   <form>
+    <form>
       <div class="list" ng-if="logueado == 'no'">
         <label class="item item-input">
           <span class="input-label">Correo</span>
@@ -11,8 +11,7 @@
           <input type="password" ng-model="login.clave">
         </label>
         <div class="padding">
-          <button class="button button-block button-positive" ng-click="Logear()" >Log In</button>
-          <button class="button button-block button-positive" ng-click="LoginGitHub()" >Login con GitHub</button>
+          <button class="button button-block button-positive" ng-click="Logear()" >Ingresar</button>
           <p class="text-center text-muted">
             <small><a ng-click="Resetear()">Olvide mi contraseña</a></small>
           </p>
@@ -20,14 +19,21 @@
             <small>No tienes una cuenta? <a ui-sref="registro">Registrate</a></small>
           </p>
         </div>
-        <label class="item item-input">
-          <span class="input-label" style="color:red">{{errorMensaje}}</span>
-        </label>
+        <div class="padding">
+          <div class="{{mensajeLogin.estilo}}" ng-if="mensajeLogin.ver" style="text-align:center">
+            <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{mensajeLogin.mensaje}}</span>
+          </div>
+        </div>
       </div>
       <div class="list" ng-if="logueado == 'si'">
         <div class="padding">
-        <button class="button button-block button-positive" ng-if="verificado == 'no'" ng-click="VerificarMail()">Verificar Mail</button>
-          <button class="button button-block button-positive" ng-click="Deslogear()" >Log Out</button>
+          <div class="alert-success" ng-if="verificado == 'no' && !cartelVerificar">
+            <p style="font-size: 16px;">Todavía no has verificado tu cuenta, <br><small><a ng-click="VerificarMail()">haz click aqui</a></small> para recibir el mail.</p>
+          </div>
+          <div class="alert-success" ng-if="verificado == 'no' && cartelVerificar">
+            <p style="font-size: 16px;">Email enviado.</p>
+          </div>
+          <button class="button button-block button-positive" ng-click="Deslogear()" >Salir</button>
         </div>
       </div>
     </form>

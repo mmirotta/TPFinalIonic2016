@@ -4,7 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 
+  'starter.controllers', 
+  'starter.login',
+  'starter.desafio',
+  'starter.desafios'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -43,6 +47,27 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     templateUrl: 'templates/registro.html',
     controller: 'RegistroCtrl'
   })
+
+  .state('app.listaUsuarios', {
+      url: '/listaUsuarios',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/listaUsuarios.html',
+          controller: 'ListaUsuariosCtrl'
+        }
+      }
+  })
+
+  .state('app.verUsuario', {
+    url: '/verUsuario/:usuario',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/verUsuario.html',
+        controller: 'VerUsuarioCtrl'
+      }
+    }
+  })
+
 
   .state('app.perfil', {
     url: '/perfil',
@@ -90,6 +115,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         'menuContent': {
           templateUrl: 'templates/misDesafios.html',
           controller: 'MisDesafiosCtrl'
+        }
+      }
+  })
+
+  .state('app.verificarDesafios', {
+      url: '/verificarDesafios',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/verificarDesafios.html',
+          controller: 'VerificarDesafiosCtrl'
         }
       }
   });

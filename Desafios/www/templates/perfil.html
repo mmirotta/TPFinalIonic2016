@@ -18,6 +18,11 @@
             {{usuario.correo}}
           </div>
         </div>
+        <div class="padding">
+          <div ng-if="verificado == 'no'">
+            <p>Todavía no has verificado tu cuenta, <small><a ng-click="VerificarMail()">haz click aqui</a></small>para recibir el mail.</p>
+          </div>
+        </div>
     </div>
   </ion-content>
 </ion-view>

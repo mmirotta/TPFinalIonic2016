@@ -1,0 +1,19 @@
+<ion-view view-title="Usuario: {{usuarioBuscado.nombre}}">
+  <ion-content>
+  	<div class="list">
+		<label class="item item-input item-stacked-label">
+			<span class="input-label">Correo</span>
+			<p>{{usuarioBuscado.correo}}</p>
+		</label>
+		<div class="padding">
+			<div class="button-bar">
+				<button class="button button-balanced" style="margin-right:2%" ng-click="Borrar()" ng-if="(!usuarioBuscado.borrado)">Borrar</button>
+				<button class="button button-assertive" style="margin-left:2%" ng-click="Volver()">Volver</button>
+			</div>
+		</div>
+		<div class="padding" ng-if="mensaje.ver">
+			<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+		</div>
+	</div>
+  </ion-content>
+</ion-view>
