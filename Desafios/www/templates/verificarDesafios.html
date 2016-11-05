@@ -1,10 +1,10 @@
-<ion-view view-title="Mis Desafíos">
+<ion-view view-title="Verificar Desafíos">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})"> <!-- href="#/app/desafioVer/{{desafio}}"> -->
-        {{desafio.titulo}}
+      <ion-item ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})">
+        <h4>{{desafio.titulo}}</h4>
+        <p>{{desafio.descripcion}}</p>
       </ion-item>
     </ion-list>
-  	<button class="btn-nuevoDesafio" ng-click="NuevoDesafio()"><i class="fa fa-plus fa-2x"></i></button>
   </ion-content>
 </ion-view>

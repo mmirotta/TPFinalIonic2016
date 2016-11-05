@@ -1,6 +1,6 @@
 angular.module('starter.login', [])
 
-.controller('LoginCtrl', function($scope, $stateParams, $timeout, $state) {
+.controller('LoginCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
   $scope.logueado = 'no';
   $scope.verificado = 'no';
 
@@ -19,7 +19,7 @@ angular.module('starter.login', [])
       var usuario = firebase.auth().currentUser;
       var updates = {};
       updates['/usuario/' + usuario.displayName + '/fechaAcceso'] = firebase.database.ServerValue.TIMESTAMP;
-      firebase.database().ref().update(updates);
+      Servicio.Editar(updates);
 
       $timeout(function() {
         $scope.logueado = 'si';
@@ -154,7 +154,7 @@ angular.module('starter.login', [])
   };
 })
 
-.controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state) {
+.controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
   $scope.login = {};
   $scope.login.usuario = "jperez@gmail.com";
   $scope.login.clave = "123456";
@@ -168,7 +168,7 @@ angular.module('starter.login', [])
     firebase.auth().createUserWithEmailAndPassword($scope.login.usuario, $scope.login.clave)
     .then(function(resultado){
       var fecha = firebase.database.ServerValue.TIMESTAMP;
-      firebase.database().ref('usuario/' + $scope.login.nombre).set({
+      var usuario = {
         correo: $scope.login.usuario,
         nombre: $scope.login.nombre,
         saldo: "1000",
@@ -176,7 +176,8 @@ angular.module('starter.login', [])
         fechaAcceso: fecha,
         perfil:"cliente",
         borrado:false 
-      });
+      };
+      Servicio.Guardar('usuario/' + $scope.login.nombre, usuario);
       firebase.auth().signInWithEmailAndPassword($scope.login.usuario, $scope.login.clave).catch(function (error){
 
         }).then( function(resultado){
@@ -214,31 +215,46 @@ angular.module('starter.login', [])
   };
 })
 
-.controller('ListaUsuariosCtrl', function($scope, $state, $timeout) {
-  var usuarioLogeado = firebase.auth().currentUser;
-  $scope.usuario = {};
-  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-  referenciaUsuario.on('value', function(snapshot) {
-    $timeout(function() {
-      $scope.usuario = snapshot.val();
-    });
-  });
+.controller('ListaUsuariosCtrl', function($scope, $state, $timeout, Servicio) {
+  try
+  {
+    var usuarioLogeado = firebase.auth().currentUser;
+    $scope.usuario = {};
 
-  $scope.usuarios = [];
-
-  var referenciaUsuarios = firebase.database().ref('usuario/');
-  referenciaUsuarios.on('child_added', function (snapshot) {
-    $timeout(function() {
-      var usuario = snapshot.val();
-      if (usuario.borrado == false) {
-          $scope.usuarios.push(usuario);
-      }
+    var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
+    referenciaUsuario.on('value', function(snapshot) {
+      $timeout(function() {
+        $scope.usuario = snapshot.val();
+      });
     });
-  });
+
+    $scope.usuarios = [];
+
+    var referenciaUsuarios = firebase.database().ref('usuario/');
+    referenciaUsuarios.on('child_added', function (snapshot) {
+      $timeout(function() {
+        var usuario = snapshot.val();
+        if (usuario.borrado == false) {
+            $scope.usuarios.push(usuario);
+        }
+      });
+    });
+  }
+  catch(error)
+  {
+    console.info("Ha ocurrido un error en ListaUsuariosCtrl. " + error);
+  }
 
   $scope.VerUsuario = function(usuario){
-    var param = JSON.stringify(usuario);
-    $state.go('app.verUsuario', {usuario:param});
+    try
+    {
+      var param = JSON.stringify(usuario);
+      $state.go('app.verUsuario', {usuario:param});
+    }
+    catch(error)
+    {
+      console.info("Ha ocurrido un error en VerUsuario(). " + error);
+    }
   };
 })
 

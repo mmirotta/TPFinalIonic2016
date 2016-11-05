@@ -104,15 +104,19 @@ angular.module('starter.desafios', [])
   referenciaDesafios.on('child_added', function (snapshot) {
     $timeout(function() {
       var desafio = snapshot.val();
-      desafio.pagina = "misDesafios";
-      if (desafio.usuarioCreador.nombre == $scope.usuario.nombre || desafio.usuarioAcepta.nombre == $scope.usuario.nombre)
-        $scope.desafios.push(desafio);
+      desafio.pagina = "verificarDesafios";
+      if (desafio.aceptada == true)
+      {
+        var fecha = new Date(desafio.fechaCreacion)
+        var fechaActual = new Date();
+        fecha.setHours(fecha.getHours() + desafio.vencimiento);
+        if (fecha > fechaActual)
+        {
+          $scope.desafios.push(desafio);
+        }
+      }
     });
   });
-
-  $scope.NuevoDesafio = function(){
-    $state.go('app.desafio');
-  }
 
   $scope.VerDesafio = function(desafio){
     var param = JSON.stringify(desafio);

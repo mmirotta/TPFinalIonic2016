@@ -8,7 +8,8 @@ angular.module('starter', ['ionic',
   'starter.controllers', 
   'starter.login',
   'starter.desafio',
-  'starter.desafios'])
+  'starter.desafios',
+  'starter.servicio'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
