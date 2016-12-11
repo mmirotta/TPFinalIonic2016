@@ -9,14 +9,27 @@ a:hover{
 	cursor:pointer;
 }
 
+.imagenMisDesafios{
+    max-width: 40px;
+    max-height: 40px;
+    width: 100%;
+    height: 100%;
+    margin-right: 5%;
+}
+
 .btn-nuevoDesafio{
   bottom:10%;
   right:10%;
   position: fixed;
-  border-radius: 50%;
-  width: 18%;
   height: 15%;
-  background-color: #387ef5; 
+}
+
+.btn-nuevoDesafio:hover
+{
+  bottom:10%;
+  right:10%;
+  position: fixed;
+  height: 15%;
 }
 
 /*Contenedores de error o correcto.*/
@@ -42,4 +55,45 @@ a:hover{
 }
 .alert-danger .alert-link {
   color: #843534;
+}
+
+/*Estilo Procesando*/
+.overlay  
+{
+    position: fixed;
+    z-index: 98;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #DEDDDD; 
+    filter: alpha(opacity=80); 
+    opacity: 0.8; 
+}
+.overlayContent
+{
+    z-index: 99;
+    margin: 50% auto;
+    width: 60%;
+    padding: 5%; 
+    background-color: #FFFFFF;
+    border:1px solid #000;
+    opacity: 1; 
+}
+
+.sombra{
+  border: 1px solid rgba(0,0,0.2);
+  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+}
+
+.botones
+{
+  background-color:#434443; 
+  color:#FFFFFF;
+}
+
+.botones:hover
+{
+  background-color:#636764; 
+  color:#000000;
 }

@@ -1,41 +1,42 @@
 <ion-view view-title="Desafío: {{desafio.titulo}}">
-  <ion-content>
+  <ion-content style="background-color:#A4A4A4">
   	<div class="list">
 		<label class="item item-input item-stacked-label">
-			<span class="input-label">Descripción</span>
-			<p>{{desafio.descripcion}}</p>
+			<span class="input-label" style="color:#000000">Descripción</span>
+			<p style="color:#FFFFFF">{{desafio.descripcion}}</p>
 		</label>
 		<label class="item item-input item-stacked-label">
-			<span class="input-label">Apuesta</span>
-			<span >{{desafio.apuesta}}</span>
+			<span class="input-label" style="color:#000000">Apuesta</span>
+			<span  style="color:#FFFFFF">{{desafio.apuesta}}</span>
 		</label>
 		<label class="item item-input item-stacked-label">
-			<span class="input-label">Finaliza en:<span style="font-size:10px">(hs)</span></span>
-			<span>{{desafio.vencimiento}}</span>
+			<span class="input-label" style="color:#000000">Finaliza en:<span style="font-size:10px; color:#000000">(hs)</span></span>
+			<span style="color:#FFFFFF">{{desafio.vencimiento}}</span>
 		</label>
 		<label class="item item-input item-stacked-label">
-			<span class="input-label">Creador:</span>
-			<span>{{desafio.usuarioCreador.nombre}}</span>
+			<span class="input-label" style="color:#000000">Creador:</span>
+			<span style="color:#FFFFFF">{{desafio.usuarioCreador.nombre}}</span>
 		</label>
 		<label class="item item-input item-stacked-label">
-			<span class="input-label">Desafiante:</span>
-			<span ng-if="desafio.usuarioAcepta.nombre != 'false'">{{desafio.usuarioAcepta.nombre}}</span>
+			<span class="input-label" style="color:#000000">Desafiante:</span>
+			<span style="color:#FFFFFF" ng-if="desafio.usuarioAcepta.nombre != 'false'">{{desafio.usuarioAcepta.nombre}}</span>
 		</label>
 		<div class="padding">
-			<span class="input-label">Ganador:</span>
+			<span class="input-label" style="color:#000000">Ganador:</span>
 			<div class="button-bar">
-				<button class="button button-balanced" style="margin-right:2%" ng-click="Aceptar({desafio.usuarioAcepta.nombre}})" ng-if="(!desafio.finalizada)">{desafio.usuarioAcepta.nombre}}</button>
-				<button class="button button-balanced" style="margin-right:2%" ng-click="Aceptar({{desafio.usuarioCreador.nombre}})" ng-if="(!desafio.finalizada)">{{desafio.usuarioCreador.nombre}}</button>
+				<button class="button button-balanced sombra" style="margin-right:2%" ng-click="Aceptar(creador)" ng-if="(!desafio.finalizada)">{{desafio.usuarioCreador.nombre}}</button>
+				<button class="button button-balanced sombra" style="margin-left:2%" ng-click="Aceptar(acepta)" ng-if="(!desafio.finalizada)">{{desafio.usuarioAcepta.nombre}}</button>
 			</div>
-			<div class="button-bar">
-				<button class="button button-balanced" style="margin-right:2%" ng-click="Aceptar(empate)" ng-if="(!desafio.finalizada)">Empate</button>
-				<button class="button button-full button-assertive" style="margin-left:2%" ng-click="Volver()">Volver</button>
+			<div class="button-bar" style="margin-top:1%">
+				<button class="button button-energized sombra" style="margin-right:2%" ng-click="Aceptar(empate)" ng-if="(!desafio.finalizada)">Empate</button>
+				<button class="button button-assertive sombra" style="margin-left:2%" ng-click="Volver()">Volver</button>
 			</div>
-
 		</div>
-		<div class="padding" ng-if="mensaje.ver">
-			<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
-		</div>
+		<div class="overlay" ng-if="mensaje.ver">
+			<div class="overlayContent">
+				<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+			</div>
+		<div>
 	</div>
   </ion-content>
 </ion-view>

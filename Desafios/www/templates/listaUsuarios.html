@@ -1,9 +1,9 @@
 <ion-view view-title="Usuarios">
-  <ion-content>
+  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
     <ion-list>
-      <ion-item ng-repeat="usuario in usuarios" ng-click="VerUsuario({{usuario}})"> 
-        {{usuario.nombre}}
-      </ion-item>
+      <a class="item" style="background-color:#A4A4A4;" ng-repeat="usuario in usuarios" ng-click="VerUsuario({{usuario}})"> 
+        <span style="color:#000000; font-size:16px">{{usuario.nombre}}</span> - <span style="font-size: 12px;color:#FFFFFF">Saldo {{usuario.saldo}}$</span>
+      </a>
     </ion-list>
   </ion-content>
 </ion-view>

@@ -3959,12 +3959,12 @@ a.subdued {
     .bar.bar-assertive.bar-footer {
       background-image: linear-gradient(180deg, #e42112, #e42112 50%, transparent 50%); }
   .bar.bar-balanced {
-    border-color: #28a54c;
-    background-color: #33cd5f;
+    border-color: #419D5F;
+    background-color: #419D5F;
     background-image: linear-gradient(0deg, #28a54c, #28a54c 50%, transparent 50%);
-    color: #fff; }
+    color: #000; }
     .bar.bar-balanced .title {
-      color: #fff; }
+      color: #000000; }
     .bar.bar-balanced.bar-footer {
       background-image: linear-gradient(180deg, #28a54c, #28a54c 50%, transparent 50%); }
   .bar.bar-energized {
@@ -4194,15 +4194,15 @@ a.subdued {
     background: none; }
 
 .bar-balanced .button {
-  border-color: #28a54c;
-  background-color: #33cd5f;
-  color: #fff; }
+  border-color: #419D5F;
+  background-color: #419D5F;
+  color: #000000; }
   .bar-balanced .button:hover {
     color: #fff;
     text-decoration: none; }
   .bar-balanced .button.active, .bar-balanced .button.activated {
-    border-color: #28a54c;
-    background-color: #28a54c; }
+    border-color: #419D5F;
+    background-color: #419D5F; }
   .bar-balanced .button.button-clear {
     border-color: transparent;
     background: none;
@@ -9006,7 +9006,7 @@ a.button {
   .button-bar.bar-assertive > .button {
     border-color: #e42112; }
   .button-bar.bar-balanced > .button {
-    border-color: #28a54c; }
+    border-color: #419D5F; }
   .button-bar.bar-energized > .button {
     border-color: #e6b500; }
   .button-bar.bar-royal > .button {

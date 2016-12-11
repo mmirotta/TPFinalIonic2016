@@ -1,11 +1,11 @@
 <ion-view view-title="Mis Desafíos">
-  <ion-content>
+  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
     <ion-list>
-      <ion-item ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})"> <!-- href="#/app/desafioVer/{{desafio}}"> -->
-        <h4>{{desafio.titulo}}</h4>
-        <p>{{desafio.descripcion}}</p>
-      </ion-item>
+      <a class="item" style="background-color:#A4A4A4; color:#FFFFFF" ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})">
+        <h4 style="width:100%; color:#000000; font-size: 20px">{{desafio.titulo}}</h4>
+        <span style="width:100%; color:#FFFFFF; font-size: 16px">{{desafio.descripcion}}</span>
+    	<span style="width:100%; color:#FFFFFF; font-size: 16px">Resultado: {{desafio.resultado}} - Apuesta {{desafio.apuesta}}</span>
+      </a class="item" style="background-color:#A4A4A4; color:#FFFFFF">
     </ion-list>
-  	<button class="btn-nuevoDesafio" ng-click="NuevoDesafio()"><i class="fa fa-plus fa-2x"></i></button>
   </ion-content>
 </ion-view>

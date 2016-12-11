@@ -1,35 +1,44 @@
 <ion-view view-title="Nuevo Desafío">
-  <ion-content>
-  	<div class="list">
-	  	<label class="item item-input item-stacked-label">
-	    	<span class="input-label">Título</span>
-	    	<input type="text" ng-model="desafio.titulo" maxlength="25">
-	  	</label>
-	  	<label class="item item-input item-stacked-label">
-		    <span class="input-label">Descripción</span>
-		    <textarea ng-model="desafio.descripcion"></textarea>
-	  	</label>
-	  	<label class="item item-input item-stacked-label">
-		    <span class="input-label">Apuesta</span>
-		    <span>{{desafio.apuesta}}</span>
+  <ion-content style="background-color:#A4A4A4">
+  	<div class="list" style="background-color:#A4A4A4; color: #FFFFFF">
+  		<label class="item item-input item-stacked-label" style="background-color:#7B7B7B">
+		    <span class="input-label" style="color:#FFFFFF;">Título</span>
    		</label>
-		<div class="item range range-positive">
-		    <span>1</span>
-		    <input type="range" name="apuesta" min="1" max="20" ng-model="desafio.apuesta">
-		    <span>20</span>
-		</div>
 	  	<label class="item item-input item-stacked-label">
-		    <span class="input-label">Finaliza en:<span style="font-size:10px">(hs)</span></span>
-		    <span>{{desafio.vencimiento}}</span>
+	    	<input type="text" style="width: 195%; background-color:#A4A4A4; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="desafio.titulo" maxlength="25">
 	  	</label>
-		<div class="item range range-positive">
-			<span>1</span>
+	  	<label class="item item-input item-stacked-label" style="background-color:#7B7B7B">
+		    <span class="input-label" style="color:#FFFFFF;">Descripción</span>
+   		</label>
+	  	<label class="item item-input item-stacked-label">
+		    <textarea style="width: 95%; background-color:#A4A4A4; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="desafio.descripcion"></textarea>
+	  	</label>
+	  	<label class="item item-input item-stacked-label" style="background-color:#7B7B7B">
+		    <span class="input-label" style="color:#FFFFFF;">Apuesta</span>
+		    <span style="color:#FFFFFF;">{{desafio.apuesta}}</span>
+   		</label>
+		<div class="item range range-positive" style="background-color:#A4A4A4">
+		    <span style="color:#FFFFFF;">1</span>
+		    <input type="range" name="apuesta" min="1" max="20" ng-model="desafio.apuesta">
+		    <span style="color:#FFFFFF;">20</span>
+		</div>
+	  	<label class="item item-input item-stacked-label" style="background-color:#7B7B7B">
+		    <span class="input-label" style="color:#FFFFFF;">Finaliza en:<span style="font-size:10px">(hs)</span></span>
+		    <span style="color:#FFFFFF;">{{desafio.vencimiento}}</span>
+	  	</label>
+		<div class="item range range-positive" style="background-color:#A4A4A4">
+			<span style="color:#FFFFFF;">1</span>
 			<input type="range" name="vencimiento" min="1" max="24" ng-model="desafio.vencimiento">
-			<span>24</span>
+			<span style="color:#FFFFFF;">24</span>
 		</div>
 	  <div class="padding">
-	  	<button class="button button-block button-positive" ng-click="Guardar()">Generar</button>
+	  	<button class="button button-block botones" ng-click="Guardar()">Generar</button>
 	  </div>
+	  <div class="overlay" ng-if="mensaje.ver">
+		<div class="overlayContent">
+			<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+		</div>
+	  <div>
 	</div>
   </ion-content>
 </ion-view>

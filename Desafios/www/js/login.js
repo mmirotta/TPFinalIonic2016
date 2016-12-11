@@ -1,6 +1,6 @@
 angular.module('starter.login', [])
 
-.controller('LoginCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
+.controller('LoginCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
   $scope.logueado = 'no';
   $scope.verificado = 'no';
 
@@ -10,10 +10,11 @@ angular.module('starter.login', [])
 
   $scope.mensajeLogin = {};
   $scope.mensajeLogin.ver = false;
-
+  $scope.ingresando = false;
   $scope.Logear = function (){
-    $scope.errorLogin = {};
-    $scope.errorLogin.ver = false;
+    $scope.mensajeLogin = {};
+    $scope.mensajeLogin.ver = false;
+    $scope.ingresando = true;
     firebase.auth().signInWithEmailAndPassword($scope.login.usuario, $scope.login.clave)
     .then( function(resultado){
       var usuario = firebase.auth().currentUser;
@@ -21,18 +22,26 @@ angular.module('starter.login', [])
       updates['/usuario/' + usuario.displayName + '/fechaAcceso'] = firebase.database.ServerValue.TIMESTAMP;
       Servicio.Editar(updates);
 
-      $timeout(function() {
-        $scope.logueado = 'si';
-        if (usuario.emailVerified == false)
-        {
-          $scope.verificado = 'no';
-        }
-        else
-        {
-          $scope.verificado = 'si';
-          $state.go('app.perfil');
-        }
-      });
+      Servicio.Cargar('/usuario/' + usuario.displayName).on('value',
+          function(respuesta) {
+            $timeout(function() {
+              FactoryUsuario.Logueado = respuesta.val();
+              $scope.logueado = 'si';
+              if (usuario.emailVerified == false)
+              {
+                $scope.verificado = 'no';
+              }
+              else
+              {
+                $scope.verificado = 'si';
+                $state.go('app.salaDesafios');
+              }
+            }, 1000);
+          },
+          function(error) {
+            // body...
+          }
+      );
     }, function (error){
         $timeout(function() {
           switch (error.code)
@@ -40,31 +49,34 @@ angular.module('starter.login', [])
             case "auth/user-not-found":
             case "auth/wrong-password":
             case "auth/invalid-email":
-                $scope.errorLogin.mensaje = "Correo o contraseña incorrectos.";
-                $scope.errorLogin.ver = true;
+                $scope.mensajeLogin.mensaje = "Correo o contraseña incorrectos.";
+                $scope.mensajeLogin.ver = true;
               break;
 
           }
-          console.info(error.code);
-        });
+          $scope.ingresando = false;
+        }, 1000);
     });
   };
 
   $scope.Deslogear = function (){
     try
     {
-      $scope.errorLogin = {};
-      $scope.errorLogin.ver = false;
+      $scope.mensajeLogin = {};
+      $scope.mensajeLogin.ver = false;
       firebase.auth().signOut().catch(function (error){
           $scope.mensajeLogin.ver = true;
+          $scope.ingresando = false;
           $scope.mensajeLogin.mensaje = "No se pudo salir de la aplicación, intente nuevamente.";
           $scope.mensajeLogin.estilo = "alert-danger";
       }).then( function(resultado){
         $timeout(function() {
           $scope.logueado = 'no';
           $scope.mensajeLogin.ver = true;
+          $scope.ingresando = false;
           $scope.mensajeLogin.mensaje = "Gracias por utilizar la aplicación.";
           $scope.mensajeLogin.estilo = "alert-success";
+          FactoryUsuario.Logueado = null;
         });
       });
     }
@@ -127,34 +139,9 @@ angular.module('starter.login', [])
     }
   };
 
-  $scope.LoginGitHub = function (){
-    var provider = new firebase.auth.GithubAuthProvider();
-    provider.addScope('repo');
-
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-      // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-
-      console.info(user);
-
-    }).catch(function(error) {
-      
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      console.info(errorMessage);
-      // ...
-    });
-  };
 })
 
-.controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
+.controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
   $scope.login = {};
   $scope.login.usuario = "jperez@gmail.com";
   $scope.login.clave = "123456";
@@ -184,7 +171,15 @@ angular.module('starter.login', [])
           firebase.auth().currentUser.updateProfile({
             displayName: $scope.login.nombre,
           }).then(function() {  
-
+            Servicio.Cargar('/usuario/' + usuario.displayName).on('value',
+              function(respuesta) {
+                FactoryUsuario.Logueado = respuesta.val();
+              },
+              function(error) {
+                // body...
+              }
+            );
+            $state.go('app.perfil');
           }, function(error) {
             // An error happened.
           });
@@ -218,27 +213,7 @@ angular.module('starter.login', [])
 .controller('ListaUsuariosCtrl', function($scope, $state, $timeout, Servicio) {
   try
   {
-    var usuarioLogeado = firebase.auth().currentUser;
-    $scope.usuario = {};
-
-    var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-    referenciaUsuario.on('value', function(snapshot) {
-      $timeout(function() {
-        $scope.usuario = snapshot.val();
-      });
-    });
-
-    $scope.usuarios = [];
-
-    var referenciaUsuarios = firebase.database().ref('usuario/');
-    referenciaUsuarios.on('child_added', function (snapshot) {
-      $timeout(function() {
-        var usuario = snapshot.val();
-        if (usuario.borrado == false) {
-            $scope.usuarios.push(usuario);
-        }
-      });
-    });
+    $scope.usuarios = Servicio.Buscar('usuario/');
   }
   catch(error)
   {
@@ -258,33 +233,25 @@ angular.module('starter.login', [])
   };
 })
 
-.controller('VerUsuarioCtrl', function($scope, $stateParams, $timeout, $state) {
-  var usuarioLogeado = firebase.auth().currentUser;
-  $scope.usuario = {};
+.controller('VerUsuarioCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
   $scope.mensaje = {};
   $scope.mensaje.ver = false;
-  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-  referenciaUsuario.on('value', function(snapshot) {
-    $timeout(function() {
-      $scope.usuario = snapshot.val();
-    });
-  });
 
-  $scope.usuarioBuscado = {};
   $scope.usuarioBuscado = JSON.parse($stateParams.usuario);
   $scope.Borrar = function(){
       var updates = {};
       updates['/usuario/' + $scope.usuarioBuscado.nombre + '/borrado'] = true;
       updates['/usuario/' + $scope.usuarioBuscado.nombre + '/fechaBorrado'] = firebase.database.ServerValue.TIMESTAMP;
       
-      firebase.database().ref().update(updates);
+      Servicio.Editar(updates);
 
       $scope.mensaje.ver = true;
       $scope.mensaje.mensaje = "Has borado el usuario.";
   }
 
   $scope.Volver = function(){
-    $state.go('app.listaUsuarios');
+    var param = JSON.stringify($scope.usuario);
+    $state.go("app.listaUsuarios", {usuario:param});
   }
 });
 

@@ -1,28 +1,20 @@
-<ion-view view-title="Perfil">
-  <ion-content>
-    <div class="list card">
-      <div class="item item-avatar">
-        <h2>{{usuario.nombre}}</h2>
+<ion-view view-title="Perfil: {{usuario.nombre}}" >
+  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
+    <div class="list">
+      <div class="card sombra" >
+        <div class="item item-divider" style="background-color:#7B7B7B">
+          Saldo: 
+        </div>
+        <div class="item item-text-wrap">
+          {{usuario.saldo}}
+        </div>
+        <div class="item item-divider" style="background-color:#7B7B7B">
+          Correo:
+        </div>
+        <div class="item item-text-wrap" >
+          {{usuario.correo}}
+        </div>
       </div>
-        <div class="card">
-          <div class="item item-divider">
-            Saldo: 
-          </div>
-          <div class="item item-text-wrap">
-            {{usuario.saldo}}
-          </div>
-          <div class="item item-divider">
-            Correo:
-          </div>
-          <div class="item item-text-wrap">
-            {{usuario.correo}}
-          </div>
-        </div>
-        <div class="padding">
-          <div ng-if="verificado == 'no'">
-            <p>Todavía no has verificado tu cuenta, <small><a ng-click="VerificarMail()">haz click aqui</a></small>para recibir el mail.</p>
-          </div>
-        </div>
     </div>
   </ion-content>
 </ion-view>

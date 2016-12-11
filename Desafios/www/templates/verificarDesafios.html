@@ -1,10 +1,10 @@
 <ion-view view-title="Verificar Desafíos">
-  <ion-content>
+  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
     <ion-list>
-      <ion-item ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})">
-        <h4>{{desafio.titulo}}</h4>
-        <p>{{desafio.descripcion}}</p>
-      </ion-item>
+      <a class="item" style="background-color:#A4A4A4; color:#FFFFFF" ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})">
+        <h4 style="width:100%; color:#000000; font-size: 15px">{{desafio.titulo}}</h4>
+        <p style="width:100%; color:#FFFFFF; font-size: 12px">{{desafio.descripcion}}</p>
+      </a class="item" style="background-color:#A4A4A4; color:#FFFFFF">
     </ion-list>
   </ion-content>
 </ion-view>

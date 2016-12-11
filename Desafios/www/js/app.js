@@ -9,7 +9,8 @@ angular.module('starter', ['ionic',
   'starter.login',
   'starter.desafio',
   'starter.desafios',
-  'starter.servicio'])
+  'starter.servicio',
+  'starter.factoryUsuario'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -69,7 +70,6 @@ angular.module('starter', ['ionic',
     }
   })
 
-
   .state('app.perfil', {
     url: '/perfil',
     views: {
@@ -128,6 +128,16 @@ angular.module('starter', ['ionic',
           controller: 'VerificarDesafiosCtrl'
         }
       }
+  })
+
+  .state('app.desafioVerificar', {
+    url: '/desafioVerificar/:desafio',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/desafioVerificar.html',
+        controller: 'DesafioVerificarCtrl'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

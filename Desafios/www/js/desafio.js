@@ -1,21 +1,24 @@
 angular.module('starter.desafio', [])
 
-.controller('DesafioCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
+.controller('DesafioCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
   try
+  {
+    if (firebase.auth().currentUser != null)
     {
-    var usuarioLogeado = firebase.auth().currentUser;
-    $scope.usuario = {};
-    var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-    referenciaUsuario.on('value', function(snapshot) {
-      $timeout(function() {
-        $scope.usuario = snapshot.val();
+      $timeout(function(){
+        $scope.usuario = FactoryUsuario.Logueado;
       });
-    });
-
+    }
+    else
+    {
+      $state.go("login");
+    }
+    $scope.mensaje = {};
+    $scope.mensaje.ver = false;
     $scope.usuarioReserva = {};
-    $scope.usuarioReserva.nombre = usuarioLogeado.displayName;
+    $scope.usuarioReserva.nombre = $scope.usuario.nombre;
     $scope.usuarioReserva.monto = 0;
-    var referenciaReserva = firebase.database().ref('reserva/' + usuarioLogeado.displayName);
+    var referenciaReserva = firebase.database().ref('reserva/' + $scope.usuario.nombre);
     referenciaReserva.on('value', function(snapshot) {
       $timeout(function() {
         if (snapshot.val() != null)
@@ -56,8 +59,11 @@ angular.module('starter.desafio', [])
       };
 
       Servicio.Guardar('reserva/' + $scope.usuario.nombre + '/' + $scope.desafio.titulo, reserva);
-
-      $state.go('app.salaDesafios');
+        $scope.ver = true;
+        $scope.mensaje.mensaje = "Desafio generado.";
+      $timeout(function(){
+        $state.go('app.salaDesafios');
+      }, 2000);
     }
     catch(error)
     {
@@ -66,66 +72,117 @@ angular.module('starter.desafio', [])
   }
 })
 
-.controller('DesafioVerCtrl', function($scope, $stateParams, $timeout, $state) {
-  var usuarioLogeado = firebase.auth().currentUser;
-  $scope.usuario = {};
-  $scope.mensaje = {};
-  $scope.mensaje.ver = false;
-  var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-  referenciaUsuario.on('value', function(snapshot) {
-    $timeout(function() {
-      $scope.usuario = snapshot.val();
-    });
-  });
-
-  $scope.desafio = {};
-  $scope.desafio = JSON.parse($stateParams.desafio);
-  $scope.Aceptar = function(){
-      var updates = {};
-      updates['/desafio/' + $scope.desafio.titulo + '/aceptada'] = true;
-      updates['/desafio/' + $scope.desafio.titulo + '/usuarioAcepta'] = {nombre:$scope.usuario.nombre, correo:$scope.usuario.correo};
-      updates['/desafio/' + $scope.desafio.titulo + '/fechaAceptada'] = firebase.database.ServerValue.TIMESTAMP;
-      
-      firebase.database().ref().update(updates);
-
-      firebase.database().ref('reserva/' + $scope.usuario.nombre + '/' + $scope.desafio.titulo).set({
-        usuario: $scope.usuario.nombre, monto: parseInt($scope.desafio.apuesta), vencido: false
-      });
-
-      $scope.mensaje.ver = true;
-      $scope.mensaje.mensaje = "Has aceptado la apuesta, suerte.";
-  }
-
-  $scope.Volver = function(){
-    console.info($scope.desafio);
-    if ($scope.desafio.pagina == "salaDesafios")
-      $state.go('app.salaDesafios');
-    else if ($scope.desafio.pagina == "misDesafios")
-      $state.go('app.misDesafios');
-  }
-})
-
-.controller('VerificarDesafiosCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
+.controller('DesafioVerCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
   try
   {
-    var usuarioLogeado = firebase.auth().currentUser;
-    $scope.usuario = {};
+    if (firebase.auth().currentUser != null)
+    {
+      $timeout(function(){
+        $scope.usuario = FactoryUsuario.Logueado;
+      });
+    }
+    else
+    {
+      $state.go("login");
+    }
     $scope.mensaje = {};
     $scope.mensaje.ver = false;
-    var referenciaUsuario = firebase.database().ref('usuario/' + usuarioLogeado.displayName);
-    referenciaUsuario.on('value', function(snapshot) {
-      $timeout(function() {
-        $scope.usuario = snapshot.val();
-      });
-    });
-
     $scope.desafio = {};
     $scope.desafio = JSON.parse($stateParams.desafio);
   }
   catch(error)
   {
-    console.info("Ha ocurrido un error en VerificarDesafiosCtrl. " + error);
+    console.info("Ha ocurrido un error en DesafioVerCtrl. " + error);
   }
+
+  $scope.Aceptar = function(){
+    try
+    {
+      var updates = {};
+      updates['/desafio/' + $scope.desafio.titulo + '/aceptada'] = true;
+      updates['/desafio/' + $scope.desafio.titulo + '/usuarioAcepta'] = {nombre:$scope.usuario.nombre, correo:$scope.usuario.correo};
+      updates['/desafio/' + $scope.desafio.titulo + '/fechaAceptada'] = firebase.database.ServerValue.TIMESTAMP;
+      
+      Servicio.Editar(updates);
+
+      var reserva = {
+        usuario: $scope.usuario.nombre, monto: parseInt($scope.desafio.apuesta), vencido: false
+      };
+      Servicio.Guardar('reserva/' + $scope.usuario.nombre + '/' + $scope.desafio.titulo, reserva);
+      $scope.mensaje.ver = true;
+      $scope.mensaje.mensaje = "Has aceptado la apuesta, suerte.";
+      $timeout(function(){
+        $state.go('app.salaDesafios');
+      }, 1000);
+    }
+    catch(error)
+    {
+      console.info("Ha ocurrido un error en DesafioCtrl-Aceptar. " + error);
+    }
+  }
+
+  $scope.Volver = function(){
+    try
+    {
+      if ($scope.desafio.pagina == "salaDesafios")
+        $state.go('app.salaDesafios');
+      else if ($scope.desafio.pagina == "misDesafios")
+        $state.go('app.misDesafios');
+    }
+    catch(error)
+    {
+      console.info("Ha ocurrido un error en DesafioCtrl-Volver. " + error);
+    }
+  }
+})
+
+.controller('DesafioVerificarCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
+  try
+  {
+    if (firebase.auth().currentUser != null)
+    {
+      $timeout(function(){
+        $scope.usuario = FactoryUsuario.Logueado;
+      });
+    }
+    else
+    {
+      $state.go("login");
+    }
+    $scope.usuario = {};
+    $scope.mensaje = {};
+    $scope.mensaje.ver = false;
+    $scope.desafio = {};
+    $scope.desafio = JSON.parse($stateParams.desafio);
+    Servicio.Cargar('/usuario/' + $scope.desafio.usuarioCreador.nombre).on('value',
+      function(respuesta) {
+        $timeout(function() {
+          $scope.usuarioCreador = respuesta.val();
+          console.info($scope.usuarioCreador);
+        });
+      },
+      function(error) {
+        // body...
+      }
+    );
+
+    Servicio.Cargar('/usuario/' + $scope.desafio.usuarioAcepta.nombre).on('value',
+      function(respuesta) {
+        $timeout(function() {
+          $scope.usuarioAcepta = respuesta.val();
+          console.info($scope.usuarioAcepta);
+        });
+      },
+      function(error) {
+        // body...
+      }
+    );
+  }
+  catch(error)
+  {
+    console.info("Ha ocurrido un error en DesafioVerificarCtrl. " + error);
+  }
+
   $scope.Aceptar = function(eleccion){
       var updateDesafio = {};
       updateDesafio['/desafio/' + $scope.desafio.titulo + '/finalizada'] = true;
@@ -136,26 +193,35 @@ angular.module('starter.desafio', [])
       }
       else
       {
-        updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = eleccion;
+        if (eleccion == 'creador')
+        {
+          updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = $scope.usuarioCreador;
+          updateDesafio['/usuario/' + $scope.desafio.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) + $scope.desafio.apuesta;
+          updateDesafio['/usuario/' + $scope.desafio.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) - $scope.desafio.apuesta;
+        }
+        else
+        {
+          updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = $scope.usuarioAcepta;
+          updateDesafio['/usuario/' + $scope.desafio.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) - $scope.desafio.apuesta;
+          updateDesafio['/usuario/' + $scope.desafio.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) + $scope.desafio.apuesta;
+        }
+
         updateDesafio['/desafio/' + $scope.desafio.titulo + '/empate'] = false;
+
       }
+
+      updateDesafio['/reserva/' + $scope.desafio.usuarioCreador.nombre + '/' + $scope.desafio.titulo + '/monto'] = 0;
+      updateDesafio['/reserva/' + $scope.desafio.usuarioCreador.nombre + '/' + $scope.desafio.titulo + '/vencido'] = true;
+      updateDesafio['/reserva/' + $scope.desafio.usuarioAcepta.nombre + '/' + $scope.desafio.titulo + '/monto'] = 0;
+      updateDesafio['/reserva/' + $scope.desafio.usuarioAcepta.nombre + '/' + $scope.desafio.titulo + '/vencido'] = true;
       
       Servicio.Editar(updateDesafio);
-
-      var usuarioCreadorReserva = {};
-      usuarioCreadorReserva['/reserva/' + desafio.usuarioCreador.nombre + '/' + desafio.titulo + '/monto'] = 0;
-      usuarioCreadorReserva['/reserva/' + desafio.usuarioCreador.nombre + '/' + desafio.titulo + '/vencido'] = true;
-      
-      Servicio.Editar(usuarioCreadorReserva);
-
-      var usuarioAceptaReserva = {};
-      updateUsuarioReserva['/reserva/' + desafio.ususarioAcepta.nombre + '/' + desafio.titulo + '/monto'] = 0;
-      updateUsuarioReserva['/reserva/' + desafio.ususarioAcepta.nombre + '/' + desafio.titulo + '/vencido'] = true;
-      
-      Servicio.Editar(updateUsuarioReserva);
-
       $scope.mensaje.ver = true;
-      $scope.mensaje.mensaje = "Has aceptado la apuesta, suerte.";
+      $scope.mensaje.mensaje = "Desafio verificado.";
+      
+      $timeout(function(){
+        $state.go('app.verificarDesafios');
+      }, 1000);
   }
 
   $scope.Volver = function(){
