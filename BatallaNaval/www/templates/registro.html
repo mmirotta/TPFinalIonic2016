@@ -1,28 +1,41 @@
 <ion-view view-title="Registro">
-  <ion-content>
-    <form>
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Nombre</span>
-          <input type="text" ng-model="login.nombre">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Correo</span>
-          <input type="text" ng-model="login.usuario">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Contraseña</span>
-          <input type="password" ng-model="login.clave">
-        </label>
-        <div class="padding">
-          <button class="button button-block button-positive" ng-click="Registrar()" >Registrame</button>
+  <ion-header-bar style="background-color:#2A6A88" >
+    <h3 style="width:100%; text-align:center; color:#FFFFFF">Registro en la Batalla Naval</h3>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF">
+    <div class="list" style="background-color:#3EA1CF; color: #FFFFFF">
+      <div class="card sombra">
+        <div class="item item-divider" style="background-color:#826048; color:#FFFFFF">
+          <i class="icon ion-person" style="margin-right: 1%"></i>Nombre
         </div>
-        <div class="padding">
-          <div class="alert-danger" ng-if="errorLogin.ver" style="text-align:center">
-            <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{errorLogin.mensaje}}</span>
-          </div>
+        <div class="item item-text-wrap">
+          <input type="text" style="width: 100%; border-bottom: 1px solid #826048" ng-model="login.nombre">
         </div>
       </div>
-    </form>
+      <div class="card sombra">
+        <div class="item item-divider" style="background-color:#826048; color:#FFFFFF">
+          <i class="icon ion-at" style="margin-right: 1%"></i>Correo
+        </div>
+        <div class="item item-text-wrap">
+          <input type="text" style="width: 100%; border-bottom: 1px solid #826048" ng-model="login.usuario">
+        </div>
+      </div>
+      <div class="card sombra">
+        <div class="item item-divider" style="background-color:#826048; color:#FFFFFF">
+          <i class="icon ion-key" style="margin-right: 1%"></i>Clave
+        </div>
+        <div class="item item-text-wrap">
+          <input type="text" style="width: 100%; border-bottom: 1px solid #826048" ng-model="login.clave">
+        </div>
+      </div>
+    </div>
+    <div class="padding" style="margin-top:-10%">
+      <button class="button button-block botones sombra" ng-click="Registrar()" >Registrame</button>
+    </div>
+    <div class="padding">
+      <div class="alert-danger" ng-if="errorLogin.ver" style="text-align:center">
+        <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{errorLogin.mensaje}}</span>
+      </div>
+     </div>
   </ion-content>
 </ion-view>

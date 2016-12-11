@@ -88,12 +88,14 @@ a:hover{
 
 .botones
 {
-  background-color:#434443; 
+  background-color:#6A3F20; 
+  border: 1px solid #000000;
   color:#FFFFFF;
 }
 
 .botones:hover
 {
-  background-color:#636764; 
+  background-color:#6A3F20; 
+  border: 1px solid #000000;
   color:#000000;
 }

@@ -1,23 +1,23 @@
 <ion-view view-title="Login">
-  <ion-header-bar style="background-color:#419D5F" >
-    <h2 style="width:100%; text-align:center" ng-if="logueado == 'no'">Bienvenido a Desafios!</h2>
+  <ion-header-bar style="background-color:#2A6A88" >
+    <h3 style="width:100%; text-align:center; color:#FFFFFF" ng-if="logueado == 'no'">Bienvenido a la Batalla Naval!</h3>
   </ion-header-bar>
-  <ion-content style="background-color:#A4A4A4">
+  <ion-content style="background-color:#3EA1CF">
     <form>
       <div class="padding">
         <div class="{{mensajeLogin.estilo}}" ng-if="mensajeLogin.ver" style="text-align:center">
           <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{mensajeLogin.mensaje}}</span>
         </div>
       </div>
-      <div class="sombra" style="width:80%; margin:auto; border: 1px solid #000000; background-color:#7B7B7B" ng-if="logueado == 'no'">
+      <div class="sombra" style="width:80%; margin:auto; border: 1px solid #000000; background-color:#826048" ng-if="logueado == 'no'">
         <div class="padding">
           <span class="input-label" style="color:#FFFFFF; font-size:18px">Correo</span>
-          <input type="text" style="width: 100%; background-color:#7B7B7B; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="login.usuario">
+          <input type="text" style="width: 100%; background-color:#826048; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="login.usuario">
           <span class="input-label" style="color:#FFFFFF; font-size:18px">Contraseña</span>
-          <input type="password" style="width: 100%; background-color:#7B7B7B; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="login.clave">
+          <input type="password" style="width: 100%; background-color:#826048; color:#FFFFFF; border-bottom: 1px solid #FFFFFF" ng-model="login.clave">
         </div>
         <div class="padding">
-          <button class="button button-block botones"  ng-click="Logear()" >Ingresar</button>
+          <button class="button button-block botones sombra"  ng-click="Logear()" >Ingresar</button>
           <div class="overlay" ng-show="ingresando">
             <div class="overlayContent">
               <ion-spinner icon="circles"></ion-spinner><span style="font-size:22px; ">Ingresando..</span>
@@ -37,15 +37,15 @@
           <div class="alert-success" ng-if="verificado == 'no' && cartelVerificar">
             <p style="font-size: 16px;">Email enviado.</p>
           </div>
-          <div>
-            <p style="font-size: 16px;">¿Confirma que quiere salir?</p>
+          <div >
+            <p style="font-size: 16px; color: #FFFFFF">¿Confirma que quiere salir?</p>
             <button class="button button-block button-assertive" ng-click="Deslogear()" >Salir</button>
           </div>
         </div>
       </div>
     </form>
   </ion-content>
-  <ion-footer-bar style="background-color:#419D5F" ng-if="logueado == 'no'">
+  <ion-footer-bar style="background-color:#2A6A88" ng-if="logueado == 'no'">
     <p style="width: 100%; text-align:center; font-size:16px">
             No tienes una cuenta? <a ui-sref="registro" style="color:#FFFFFF">Registrate</a></p>
   </ion-footer-bar>

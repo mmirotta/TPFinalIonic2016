@@ -138,7 +138,6 @@ angular.module('starter.login', [])
       console.info("Ha ocurrido un error en VerificarMail(). " + error);
     }
   };
-
 })
 
 .controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {

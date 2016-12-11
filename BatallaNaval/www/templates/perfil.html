@@ -1,14 +1,21 @@
-<ion-view view-title="Perfil: {{usuario.nombre}}" >
-  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
+<ion-view view-title="Perfil: {{usuario.nombre}}" >  
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+      <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+      <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 20px; margin-top: 2%">Perfil: {{usuario.nombre}}</span>
+      <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Salir()">Salir</button>
+    </div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF; color:#FFFFFF">
     <div class="list">
       <div class="card sombra" >
-        <div class="item item-divider" style="background-color:#7B7B7B">
+        <div class="item item-divider" style="background-color:#826048; color:#FFFFFF">
           Saldo: 
         </div>
         <div class="item item-text-wrap">
-          {{usuario.saldo}}
+          {{usuario.saldo}}$
         </div>
-        <div class="item item-divider" style="background-color:#7B7B7B">
+        <div class="item item-divider" style="background-color:#826048; color:#FFFFFF">
           Correo:
         </div>
         <div class="item item-text-wrap" >

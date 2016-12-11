@@ -34,7 +34,7 @@ angular.module('starter.login', [])
               else
               {
                 $scope.verificado = 'si';
-                $state.go('app.salaDesafios');
+                $state.go('menu');
               }
             }, 1000);
           },
@@ -179,7 +179,7 @@ angular.module('starter.login', [])
                 // body...
               }
             );
-            $state.go('app.perfil');
+            $state.go('perfil');
           }, function(error) {
             // An error happened.
           });
@@ -224,13 +224,21 @@ angular.module('starter.login', [])
     try
     {
       var param = JSON.stringify(usuario);
-      $state.go('app.verUsuario', {usuario:param});
+      $state.go('verUsuario', {usuario:param});
     }
     catch(error)
     {
       console.info("Ha ocurrido un error en VerUsuario(). " + error);
     }
   };
+
+  $scope.Menu = function(){
+    $state.go("menu");
+  }
+
+  $scope.Salir = function(){
+    $state.go("login"); 
+  }
 })
 
 .controller('VerUsuarioCtrl', function($scope, $stateParams, $timeout, $state, Servicio) {
@@ -251,7 +259,15 @@ angular.module('starter.login', [])
 
   $scope.Volver = function(){
     var param = JSON.stringify($scope.usuario);
-    $state.go("app.listaUsuarios", {usuario:param});
+    $state.go("listaUsuarios", {usuario:param});
+  }
+
+  $scope.Menu = function(){
+    $state.go("menu");
+  }
+
+  $scope.Salir = function(){
+    $state.go("login"); 
   }
 });
 

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $state, $timeout, Servicio, FactoryUsuario) {
+.controller('MenuCtrl', function($scope, $state, $timeout, Servicio, FactoryUsuario) {
   try
   {
     if (firebase.auth().currentUser != null)
@@ -16,7 +16,18 @@ angular.module('starter.controllers', [])
   }
   catch (error)
   {
-    console.info("Ha ocurrido un error en AppCtrl(). " + error);
+    console.info("Ha ocurrido un error en MenuCtrl(). " + error);
+  }
+
+  $scope.Acceso = function(parametro){
+    try
+    {
+      $state.go(parametro);
+    }
+    catch (error)
+    {
+      console.info("Ha ocurrido un error en MenuCtrl(). " + error);
+    }
   }
 })
 
@@ -47,6 +58,14 @@ angular.module('starter.controllers', [])
   }
   catch (error)
   {
-    console.info("Ha ocurrido un error en AppCtrl(). " + error);
+    console.info("Ha ocurrido un error en PerfilCtrl(). " + error);
+  }
+
+  $scope.Menu = function(){
+    $state.go("menu");
+  }
+
+  $scope.Salir = function(){
+    $state.go("login"); 
   }
 });

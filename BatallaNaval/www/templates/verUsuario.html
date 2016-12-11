@@ -1,5 +1,12 @@
 <ion-view view-title="Usuario: {{usuarioBuscado.nombre}}">
-  <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+	  <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+	  <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 20px; margin-top: 2%">Usuario: {{usuarioBuscado.nombre}}</span>
+	  <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Salir()">Salir</button>
+	</div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF; color:#FFFFFF">
   	<div class="list">
 		<label class="item item-input item-stacked-label">
 			<span class="input-label" style="color:#000000; font-size:20px">Correo</span>
@@ -7,8 +14,8 @@
 		</label>
 		<div class="padding">
 			<div class="button-bar">
-				<button class="button button-balanced sombra" style="margin-right:2%" ng-click="Borrar()" ng-if="(!usuarioBuscado.borrado)">Borrar</button>
-				<button class="button button-assertive sombra" style="margin-left:2%" ng-click="Volver()">Volver</button>
+				<button class="button button-balanced sombra" style="margin-right:2%" ng-click="Borrar()" ng-if="(!usuarioBuscado.borrado)"><i class="icon ion-trash-a" style="margin-right: 1%"></i>Borrar</button>
+				<button class="button button-assertive sombra" style="margin-left:2%" ng-click="Volver()"><i class="icon ion-reply" style="margin-right: 1%"></i>Volver</button>
 			</div>
 		</div>
 		<div class="padding" ng-if="mensaje.ver">
