@@ -1,0 +1,32 @@
+<ion-view view-title="Usuarios">
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+	  <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+	  <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 26px; margin-top: 2%">Nueva Batalla</span>
+	  <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Salir()">Salir</button>
+	</div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF; color:#FFFFFF">
+  	<div class="padding">
+	  	<div class="list">
+	        <label class="item item-input item-stacked-label" style="background-color:#826048">
+			    <span class="input-label" style="color:#FFFFFF;">Apuesta</span>
+			    <span style="color:#FFFFFF;">{{apuesta}}</span>
+	   		</label>
+			<div class="item range range-positive" style="background-color:#A4A4A4">
+			    <span style="color:#000000;">1</span>
+			    <input type="range" name="apuesta" min="1" max="20" ng-model="apuesta">
+			    <span style="color:#000000;">20</span>
+			</div>
+	    </div>	
+    </div>
+    <div class="padding">
+      <button class="button button-block botones sombra" ng-click="Generar()" >Generar</button>
+    </div>
+    <div class="overlay" ng-if="mensaje.ver">
+		<div class="overlayContent">
+			<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+		</div>
+  	<div>
+  </ion-content>
+</ion-view>

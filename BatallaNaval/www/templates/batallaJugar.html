@@ -1,0 +1,27 @@
+<ion-view view-title="Batalla">
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+	  <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+	  <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 26px; margin-top: 2%">Batalla</span>
+	  <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Volver()">Volver</button>
+	</div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF">
+  	<div class="padding" >
+	    <a ng-click="Elegir(1)"><img src="img/barco.png" class="buttonJuego"></a>
+	    <a ng-click="Elegir(2)"><img src="img/barco.png" class="buttonJuego"></a>
+	    <a ng-click="Elegir(3)"><img src="img/barco.png" class="buttonJuego"></a>
+	    <a ng-click="Elegir(4)"><img src="img/barco.png" class="buttonJuego"></a>
+	</div>
+	<div class="padding" >
+	    <div class="padding alert-success sombra">
+			<p style="font-size: 16px;">{{accion}}</p>
+		</div>
+		<div class="overlay" ng-if="mensaje.ver">
+			<div class="overlayContent">
+				<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+			</div>
+		<div>
+	</div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,36 @@
+<ion-view view-title="Batalla">
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+	  <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+	  <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 26px; margin-top: 2%">Batalla</span>
+	  <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Salir()">Salir</button>
+	</div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF">
+  	<div class="list" >
+		<label class="item item-input item-stacked-label">
+			<span class="input-label" style="color:#000000">Apuesta</span>
+			<span style="color:#FFFFFF">{{batalla.apuesta}}</span>
+		</label>
+		<label class="item item-input item-stacked-label" style="color:#FFFFFF">
+			<span class="input-label" style="color:#000000">Creador:</span>
+			<span style="color:#FFFFFF">{{batalla.usuarioCreador.nombre}}</span>
+		</label>
+		<label class="item item-input item-stacked-label">
+			<span class="input-label" style="color:#000000">Desafiante:</span>
+			<span style="color:#FFFFFF" ng-if="batalla.usuarioAcepta.nombre != 'false'">{{batalla.usuarioAcepta.nombre}}</span>
+		</label>
+		<div class="padding">
+			<div class="button-bar">
+				<button class="button button-balanced sombra" style="margin-right:2%" ng-click="Aceptar()" ng-if="(usuario.nombre != batalla.usuarioCreador.nombre)">Aceptar</button>
+				<button class="button button-assertive sombra" style="margin-left:2%" ng-click="Volver()">Volver</button>
+			</div>
+		</div>
+		<div class="overlay" ng-if="mensaje.ver">
+			<div class="overlayContent">
+				<span class="input-label" style="width:100%">{{mensaje.mensaje}}</span>
+			</div>
+		<div>
+	</div>
+  </ion-content>
+</ion-view>

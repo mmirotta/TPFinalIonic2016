@@ -1,0 +1,17 @@
+<ion-view view-title="Sala Batallas">
+  <ion-header-bar>
+    <div class="bar bar-header" style="background-color:#2A6A88">
+	  <button class="button button-icon icon ion-navicon" style="color:#FFFFFF" ng-click="Menu()"></button>
+	  <span style="color:#FFFFFF; left:0; right:0; text-align:center; width:78%; font-size: 26px; margin-top: 2%">Sala Batallas</span>
+	  <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Salir()">Salir</button>
+	</div>
+  </ion-header-bar>
+  <ion-content style="background-color:#3EA1CF; color:#FFFFFF">
+    <ion-list>
+      <a class="item" style="background-color:#3EA1CF; color:#FFFFFF" ng-repeat="batalla in ListaBatallas" ng-click="VerBatalla({{batalla}})">
+        <h4 style="width:100%; color:#000000; font-size: 15px">Creada por - {{batalla.usuarioCreador.nombre}}</h4>
+        <p style="width:100%; color:#FFFFFF; font-size: 12px">Apuesta - {{batalla.apuesta}} $</p>
+      </a>
+    </ion-list>
+  </ion-content>
+</ion-view>

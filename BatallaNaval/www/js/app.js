@@ -8,7 +8,9 @@ angular.module('starter', ['ionic',
   'starter.controllers', 
   'starter.login',
   'starter.servicio',
-  'starter.factoryUsuario'])
+  'starter.factoryUsuario',
+  'starter.batalla',
+  'starter.batallas'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -63,6 +65,36 @@ angular.module('starter', ['ionic',
     url: '/perfil',
     templateUrl: 'templates/perfil.html',
     controller: 'PerfilCtrl'
+  })
+
+  .state('nuevaBatalla', {
+    url: '/nuevaBatalla',
+    templateUrl: 'templates/nuevaBatalla.html',
+    controller: 'NuevaBatallaCtrl'
+  })
+
+  .state('salaBatallas', {
+    url: '/salaBatallas',
+    templateUrl: 'templates/salaBatallas.html',
+    controller: 'SalaBatallasCtrl'
+  })  
+
+  .state('batallaVer', {
+    url: '/batallaVer/:batalla',
+    templateUrl: 'templates/batallaVer.html',
+    controller: 'BatallaVerCtrl'
+  })
+
+  .state('misBatallas', {
+    url: '/misBatallas',
+    templateUrl: 'templates/misBatallas.html',
+    controller: 'MisBatallasCtrl'
+  })  
+
+  .state('batallaJugar', {
+    url: '/batallaJugar/:batalla',
+    templateUrl: 'templates/batallaJugar.html',
+    controller: 'BatallaJugarCtrl'
   })
 
   // if none of the above states are matched, use this as the fallback
