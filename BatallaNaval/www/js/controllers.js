@@ -65,7 +65,4 @@ angular.module('starter.controllers', [])
     $state.go("menu");
   }
 
-  $scope.Salir = function(){
-    $state.go("login"); 
-  }
 });

@@ -1,6 +1,6 @@
 <ion-view view-title="Login">
   <ion-header-bar style="background-color:#2A6A88" >
-    <h3 style="width:100%; text-align:center; color:#FFFFFF" ng-if="logueado == 'no'">Bienvenido a la Batalla Naval!</h3>
+    <h3 style="width:100%; text-align:center; color:#FFFFFF">Bienvenido a la Batalla Naval!</h3>
   </ion-header-bar>
   <ion-content style="background-color:#3EA1CF">
     <form>
@@ -31,15 +31,11 @@
       </div>
       <div class="list" ng-if="logueado == 'si'">
         <div class="padding">
-          <div class="alert-success" ng-if="verificado == 'no' && !cartelVerificar">
-            <p style="font-size: 16px;">Todavía no has verificado tu cuenta, <br><small><a ng-click="VerificarMail()">haz click aqui</a></small> para recibir el mail.</p>
+          <div  ng-if="verificado == 'no' && !cartelVerificar">
+            <p style="font-size: 20px; color:#FFFFFF">Todavía no has verificado tu cuenta, <br><small><a ng-click="VerificarMail()" style="font-size: 25px; color:#000000">haz click aqui</a></small> para recibir el mail.</p>
           </div>
           <div class="alert-success" ng-if="verificado == 'no' && cartelVerificar">
             <p style="font-size: 16px;">Email enviado.</p>
-          </div>
-          <div >
-            <p style="font-size: 16px; color: #FFFFFF">¿Confirma que quiere salir?</p>
-            <button class="button button-block button-assertive" ng-click="Deslogear()" >Salir</button>
           </div>
         </div>
       </div>

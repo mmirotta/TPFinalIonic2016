@@ -43,6 +43,12 @@ angular.module('starter', ['ionic',
     controller: 'LoginCtrl'
   })
 
+  .state('loginSalir', {
+    url: '/loginSalir',
+    templateUrl: 'templates/loginSalir.html',
+    controller: 'LoginCtrl'
+  })
+
   .state('registro', {
     url: '/registro',
     templateUrl: 'templates/registro.html',
@@ -69,30 +75,35 @@ angular.module('starter', ['ionic',
 
   .state('nuevaBatalla', {
     url: '/nuevaBatalla',
+    cache:false,
     templateUrl: 'templates/nuevaBatalla.html',
     controller: 'NuevaBatallaCtrl'
   })
 
   .state('salaBatallas', {
     url: '/salaBatallas',
+    cache:false,
     templateUrl: 'templates/salaBatallas.html',
     controller: 'SalaBatallasCtrl'
   })  
 
   .state('batallaVer', {
     url: '/batallaVer/:batalla',
+    cache:false,
     templateUrl: 'templates/batallaVer.html',
     controller: 'BatallaVerCtrl'
   })
 
   .state('misBatallas', {
     url: '/misBatallas',
+    cache:false,
     templateUrl: 'templates/misBatallas.html',
     controller: 'MisBatallasCtrl'
   })  
 
   .state('batallaJugar', {
     url: '/batallaJugar/:batalla',
+    cache:false,
     templateUrl: 'templates/batallaJugar.html',
     controller: 'BatallaJugarCtrl'
   })

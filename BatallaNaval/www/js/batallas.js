@@ -40,9 +40,6 @@ angular.module('starter.batallas', [])
     $state.go("menu");
   }
 
-  $scope.Salir = function(){
-    $state.go("login"); 
-  }
 })
 .controller('MisBatallasCtrl', function($scope, $state, $timeout, Servicio, FactoryUsuario) {
   try
@@ -64,7 +61,9 @@ angular.module('starter.batallas', [])
     { 
       $timeout(function(){
         var batalla = snapshot.val();
-        if (batalla.usuarioCreador.nombre == $scope.usuario.nombre || batalla.usuarioAcepta.nombre == $scope.usuario.nombre)
+        if ((batalla.usuarioCreador.nombre == $scope.usuario.nombre 
+          || batalla.usuarioAcepta.nombre == $scope.usuario.nombre) 
+          && (batalla.aceptada == true))
           $scope.ListaBatallas.push(batalla);
       });
     });
@@ -84,8 +83,5 @@ angular.module('starter.batallas', [])
     $state.go("menu");
   }
 
-  $scope.Salir = function(){
-    $state.go("login"); 
-  }
 })
 ;

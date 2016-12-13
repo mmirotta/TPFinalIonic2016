@@ -13,7 +13,8 @@ angular.module('starter.batalla', [])
     {
       $state.go("login");
     }
-    $scope.apuesta = 10;
+    $scope.batalla = {};
+    $scope.batalla.apuesta = 10;
     $scope.mensaje = {};
     $scope.mensaje.ver = false;
   }
@@ -27,24 +28,27 @@ angular.module('starter.batalla', [])
     {
       var fecha = firebase.database.ServerValue.TIMESTAMP;
       var batalla = {
-        apuesta: $scope.apuesta,
+        apuesta: $scope.batalla.apuesta,
         aceptada: false,
         finalizada: false,
+        barcoCreador: false,
+        barcoAcepta: false,
         usuarioCreador: {nombre:$scope.usuario.nombre, correo:$scope.usuario.correo},
         usuarioAcepta: {nombre:false, correo:false},
         fechaCreacion: fecha,
         clave: "Batalla - " + String(new Date())
       };
-      console.info(batalla);
+
       Servicio.Guardar('batalla/' + "Batalla - " + String(new Date()), batalla);
 
       var reserva = {
-        usuario: $scope.usuario.nombre, monto: parseInt($scope.apuesta), vencido: false
+        usuario: $scope.usuario.nombre, monto: parseInt($scope.batalla.apuesta), vencido: false
       };
-      console.info(reserva);
+
       Servicio.Guardar('reserva/' + $scope.usuario.nombre + '/' + "Batalla - " +  String(new Date()), reserva);
-        $scope.ver = true;
-        $scope.mensaje.mensaje = "Batalla generada. Espere adversario.";
+      
+      $scope.mensaje.ver = true;
+      $scope.mensaje.mensaje = "Batalla generada. Espere adversario.";
       $timeout(function(){
         $state.go('menu');
       }, 2000);
@@ -59,9 +63,6 @@ angular.module('starter.batalla', [])
     $state.go("menu");
   }
 
-  $scope.Salir = function(){
-    $state.go("login"); 
-  }
 })
 .controller('BatallaVerCtrl', function($scope, $state, $stateParams, $timeout, Servicio, FactoryUsuario) {
   try
@@ -133,9 +134,6 @@ angular.module('starter.batalla', [])
     $state.go("menu");
   }
 
-  $scope.Salir = function(){
-    $state.go("login"); 
-  }
 })
 .controller('BatallaJugarCtrl', function($scope, $state, $stateParams, $timeout, Servicio, FactoryUsuario) {
   try
@@ -174,7 +172,6 @@ angular.module('starter.batalla', [])
           function(respuesta) {
             $timeout(function() {
               $scope.usuarioCreador = respuesta.val();
-              console.info($scope.usuarioCreador);
             });
           },
           function(error) {
@@ -186,7 +183,6 @@ angular.module('starter.batalla', [])
           function(respuesta) {
             $timeout(function() {
               $scope.usuarioAcepta = respuesta.val();
-              console.info($scope.usuarioAcepta);
             });
           },
           function(error) {
@@ -243,7 +239,7 @@ angular.module('starter.batalla', [])
                         $scope.imagenes.habilitarBarco2 = false;
                       break;
                     case "3":
-                        if ($scope.batalla.barcoAcepta == 1)
+                        if ($scope.batalla.barcoAcepta == 3)
                           $scope.imagenes.barco3 =  "img/barcoHundido.png";
                         else
                           $scope.imagenes.barco3 =  "img/barcoTocado.png";
@@ -251,7 +247,7 @@ angular.module('starter.batalla', [])
                         $scope.imagenes.habilitarBarco3 = false;
                       break;
                     case "4":
-                        if ($scope.batalla.barcoAcepta == 1)
+                        if ($scope.batalla.barcoAcepta == 4)
                           $scope.imagenes.barco4 =  "img/barcoHundido.png";
                         else
                           $scope.imagenes.barco4 =  "img/barcoTocado.png";
@@ -346,8 +342,8 @@ angular.module('starter.batalla', [])
   }
 
   $scope.Elegir = function(parametro){
-    // try
-    // {
+    try
+    {
       var updates = {};
       if ($scope.batalla.turno.creador == true)
       {
@@ -361,6 +357,7 @@ angular.module('starter.batalla', [])
             creador: false,
             ronda:0
           };
+          $scope.mensaje.resultado = "Apuesta ubicada. Espere turno oponente.";
         }
         else
         {
@@ -370,7 +367,11 @@ angular.module('starter.batalla', [])
             creador: false,
             ronda: ronda,
           };
-          updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = $scope.batalla + parametro + ",";
+          if (ronda == 1)
+          {
+            updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = parametro + ",";}
+          else
+            updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = $scope.batalla.eleccionCreador + parametro + ",";
 
           if (parseInt(parametro) == parseInt($scope.batalla.barcoAcepta))
           {
@@ -396,6 +397,7 @@ angular.module('starter.batalla', [])
             creador: true,
             ronda: ronda
           };
+          $scope.mensaje.resultado = "Apuesta ubicada. Espere turno oponente.";
         }
         else
         {
@@ -405,7 +407,10 @@ angular.module('starter.batalla', [])
             creador: true,
             ronda: ronda
           };
-          updates['/batalla/' + $scope.batalla.clave + '/eleccionAcepta'] = $scope.batalla.eleccion + parametro + ",";
+          if (ronda == 2)
+            updates['/batalla/' + $scope.batalla.clave + '/eleccionAcepta'] = parametro + ",";
+          else
+            updates['/batalla/' + $scope.batalla.clave + '/eleccionAcepta'] = $scope.batalla.eleccionAcepta + parametro + ",";
           
           if ($scope.batalla.creadorAcerto == true)
           { 
@@ -418,8 +423,8 @@ angular.module('starter.batalla', [])
             {
               updates['/batalla/' + $scope.batalla.clave + '/resultado'] = "Ganó " + $scope.batalla.usuarioCreador.nombre;      
               $scope.mensaje.resultado = "Fallaste y tu oponente no, Perdiste.";
-              update['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) + $scope.batalla.apuesta;
-              update['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) - $scope.batalla.apuesta;
+              updates['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) + parseInt($scope.batalla.apuesta);
+              updates['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) - parseInt($scope.batalla.apuesta);
             }
             updates['/batalla/' + $scope.batalla.clave + '/finalizada'] = true;      
             updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
@@ -433,13 +438,17 @@ angular.module('starter.batalla', [])
             {
               updates['/batalla/' + $scope.batalla.clave + '/resultado'] = "Ganó " + $scope.batalla.usuarioAcepta.nombre;      
               updates['/batalla/' + $scope.batalla.clave + '/finalizada'] = true;
-              update['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) - $scope.batalla.apuesta;
-              update['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) + $scope.batalla.apuesta;
+              updates['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) - parseInt($scope.batalla.apuesta);
+              updates['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) + parseInt($scope.batalla.apuesta);
               updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
               updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
               updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
               updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
               $scope.mensaje.resultado = "Acertaste y tu oponente no, Ganaste.";        
+            }
+            else
+            {
+              $scope.mensaje.resultado = "Fallaste. Veremos tu oponente, espera su turno.";
             }
           }
         }
@@ -452,15 +461,11 @@ angular.module('starter.batalla', [])
         $state.go('menu');
       }, 3000);
 
-    // }
-    // catch(error)
-    // {
-    //   console.info("Ha ocurrido un error en BatallaJugarCtrl-Elige" + error);
-    // }
-  }
-
-  $scope.Volver = function(){
-    $state.go('misBatallas');
+    }
+    catch(error)
+    {
+      console.info("Ha ocurrido un error en BatallaJugarCtrl-Elige" + error);
+    }
   }
 
   $scope.Menu = function(){

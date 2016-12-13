@@ -71,12 +71,8 @@ angular.module('starter.login', [])
           $scope.mensajeLogin.estilo = "alert-danger";
       }).then( function(resultado){
         $timeout(function() {
-          $scope.logueado = 'no';
-          $scope.mensajeLogin.ver = true;
-          $scope.ingresando = false;
-          $scope.mensajeLogin.mensaje = "Gracias por utilizar la aplicación.";
-          $scope.mensajeLogin.estilo = "alert-success";
           FactoryUsuario.Logueado = null;
+          $state.go("login");
         });
       });
     }
@@ -138,6 +134,10 @@ angular.module('starter.login', [])
       console.info("Ha ocurrido un error en VerificarMail(). " + error);
     }
   };
+
+  $scope.Menu = function(){
+    $state.go("menu");
+  }
 
 })
 
