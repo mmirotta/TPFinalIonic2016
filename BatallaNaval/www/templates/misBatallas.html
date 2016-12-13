@@ -11,6 +11,7 @@
       <a class="item" style="background-color:#3EA1CF; color:#FFFFFF" ng-repeat="batalla in ListaBatallas" ng-click="JugarBatalla({{batalla}})">
         <h4 style="width:100%; color:#000000; font-size: 15px">Creada por - {{batalla.usuarioCreador.nombre}}</h4>
         <p style="width:100%; color:#FFFFFF; font-size: 12px">Apuesta - {{batalla.apuesta}} $ - Turno {{batalla.turno.nombre}}</p>
+        <p style="width:100%; color:#FFFFFF; font-size: 12px" ng-if="batalla.finalizada">Resultado - {{batalla.resultado}}</p>
       </a>
     </ion-list>
   </ion-content>

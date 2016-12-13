@@ -150,33 +150,195 @@ angular.module('starter.batalla', [])
     {
       $state.go("login");
     }
+    $timeout(function(){
+      $scope.imagenes ={
+        barco1: "img/barco.png",
+        barco2: "img/barco.png",
+        barco3: "img/barco.png",
+        barco4: "img/barco.png",
+        habilitarBarco1: true,
+        habilitarBarco2: true,
+        habilitarBarco3: true,
+        habilitarBarco4: true
+      };
+      $scope.mensaje = {};
+      $scope.mensaje.ver = false;
+      $scope.mensaje.resultado = "";
+      $scope.batalla = {};
+    
+      $scope.batalla = JSON.parse($stateParams.batalla);
 
-    $scope.mensaje = {};
-    $scope.mensaje.ver = false;
-    $scope.batalla = {};
-    $scope.batalla = JSON.parse($stateParams.batalla);
-    if ($scope.batalla.turno.nombre == FactoryUsuario.Logueado.nombre)
-    {
-      if ($scope.batalla.turno.creador == true)
+      if ($scope.batalla.finalizada == false)
       {
-        if ($scope.batalla.barcoCreador == false)
-          $scope.accion = "Elige la ubicación de tu apuesta";
+        Servicio.Cargar('/usuario/' + $scope.batalla.usuarioCreador.nombre).on('value',
+          function(respuesta) {
+            $timeout(function() {
+              $scope.usuarioCreador = respuesta.val();
+              console.info($scope.usuarioCreador);
+            });
+          },
+          function(error) {
+            // body...
+          }
+        );
+
+        Servicio.Cargar('/usuario/' + $scope.batalla.usuarioAcepta.nombre).on('value',
+          function(respuesta) {
+            $timeout(function() {
+              $scope.usuarioAcepta = respuesta.val();
+              console.info($scope.usuarioAcepta);
+            });
+          },
+          function(error) {
+            // body...
+          }
+        );
+      }
+
+      if (($scope.batalla.turno.nombre == FactoryUsuario.Logueado.nombre) || ($scope.batalla.finalizada == true))
+      {
+        if ($scope.batalla.usuarioCreador.nombre == FactoryUsuario.Logueado.nombre)
+        {
+          if ($scope.batalla.barcoCreador == false)
+          {
+            $scope.accion = "Elige la ubicación de tu apuesta";
+          }
+          else
+          {
+            if ($scope.batalla.finalizada == true)
+            {
+              $scope.imagenes.habilitarBarco1 = false;
+              $scope.imagenes.habilitarBarco2 = false;
+              $scope.imagenes.habilitarBarco3 = false;
+              $scope.imagenes.habilitarBarco4 = false;
+
+              $scope.accion = "Resultado: " + $scope.batalla.resultado;
+            }
+            else
+            {
+              $scope.accion = "Donde esta la apuesta de " + $scope.batalla.usuarioAcepta.nombre;
+            }
+            if ($scope.batalla.eleccionCreador != null)
+            {
+              var arrayEleccionCreador = $scope.batalla.eleccionCreador.split(",");
+              for (var i = 0; i < arrayEleccionCreador.length; i++) {
+                if (arrayEleccionCreador[i] != " ")
+                {
+                  switch (arrayEleccionCreador[i])
+                  {
+                    case "1":
+                        if ($scope.batalla.barcoAcepta == 1)
+                          $scope.imagenes.barco1 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco1 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco1 = false;
+                      break;
+                    case "2":
+                        if ($scope.batalla.barcoAcepta == 2)
+                          $scope.imagenes.barco2 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco2 =  "img/barcoTocado.png";
+                        
+                        $scope.imagenes.habilitarBarco2 = false;
+                      break;
+                    case "3":
+                        if ($scope.batalla.barcoAcepta == 1)
+                          $scope.imagenes.barco3 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco3 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco3 = false;
+                      break;
+                    case "4":
+                        if ($scope.batalla.barcoAcepta == 1)
+                          $scope.imagenes.barco4 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco4 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco4 = false;
+                      break;
+                  }
+                }
+              };
+            }
+          }
+        }
         else
-          $scope.accion = "Donde esta la apuesta de " + $scope.batalla.usuarioAcepta.nombre;
+        {
+          if ($scope.batalla.barcoAcepta == false)
+          {
+            $scope.accion = "Elige la ubicación de tu apuesta";
+          }
+          else
+          {
+            if ($scope.batalla.finalizada == true)
+            {
+              $scope.imagenes.habilitarBarco1 = false;
+              $scope.imagenes.habilitarBarco2 = false;
+              $scope.imagenes.habilitarBarco3 = false;
+              $scope.imagenes.habilitarBarco4 = false;
+
+              $scope.accion = "Resultado: " + $scope.batalla.resultado;
+            }
+            else
+            {
+              $scope.accion = "Donde esta la apuesta de " + $scope.batalla.usuarioCreador.nombre;
+            }
+
+            if ($scope.batalla.eleccionAcepta != null)
+            {
+              var arrayEleccionAcepta = $scope.batalla.eleccionAcepta.split(",");
+              for (var i = 0; i < arrayEleccionAcepta.length; i++) {
+                if (arrayEleccionAcepta[i] != " ")
+                {
+                  switch (arrayEleccionAcepta[i])
+                  {
+                    case "1":
+                        if ($scope.batalla.barcoCreador == 1)
+                          $scope.imagenes.barco1 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco1 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco1 = false;
+                      break;
+                    case "2":
+                        if ($scope.batalla.barcoCreador == 2)
+                          $scope.imagenes.barco2 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco2 =  "img/barcoTocado.png";
+                        
+                        $scope.imagenes.habilitarBarco2 = false;
+                      break;
+                    case "3":
+                        if ($scope.batalla.barcoCreador == 3)
+                          $scope.imagenes.barco3 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco3 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco3 = false;
+                      break;
+                    case "4":
+                        if ($scope.batalla.barcoCreador == 4)
+                          $scope.imagenes.barco4 =  "img/barcoHundido.png";
+                        else
+                          $scope.imagenes.barco4 =  "img/barcoTocado.png";
+
+                        $scope.imagenes.habilitarBarco4 = false;
+                      break;
+                  }
+                }
+              };
+            }
+          }
+        }
       }
       else
       {
-        if ($scope.batalla.barcoAcepta == false)
-          $scope.accion = "Elige la ubicación de tu apuesta";
-        else
-          $scope.accion = "Donde esta la apuesta de " + $scope.batalla.usuarioCreador.nombre;
+        $scope.mensaje.ver = true;
+        $scope.mensaje.mensaje = "Es el turno del oponente.";
       }
-    }
-    else
-    {
-      $scope.mensaje.ver = true;
-      $scope.mensaje.mensaje = "Es el turno del oponente.";
-    }
+    });
   }
   catch(error)
   {
@@ -189,13 +351,15 @@ angular.module('starter.batalla', [])
       var updates = {};
       if ($scope.batalla.turno.creador == true)
       {
+        var ronda = parseInt($scope.batalla.turno.ronda);
         if ($scope.batalla.barcoCreador == false)
         {
           updates['/batalla/' + $scope.batalla.clave + '/barcoCreador'] = parametro;
           updates['/batalla/' + $scope.batalla.clave + '/turno'] = {
             nombre:$scope.batalla.usuarioAcepta.nombre, 
             correo:$scope.batalla.usuarioAcepta.correo,
-            creador: false
+            creador: false,
+            ronda:0
           };
         }
         else
@@ -203,9 +367,21 @@ angular.module('starter.batalla', [])
           updates['/batalla/' + $scope.batalla.clave + '/turno'] = {
             nombre:$scope.batalla.usuarioAcepta.nombre, 
             correo:$scope.batalla.usuarioAcepta.correo,
-            creador: false
+            creador: false,
+            ronda: ronda,
           };
-          updates['/batalla/' + $scope.batalla.clave + '/turno/eleccionCreador'] = parametro;
+          updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = $scope.batalla + parametro + ",";
+
+          if (parseInt(parametro) == parseInt($scope.batalla.barcoAcepta))
+          {
+            updates['/batalla/' + $scope.batalla.clave + '/creadorAcerto'] = true;
+            $scope.mensaje.resultado = "Acertaste. Veremos tu oponente, espera su turno.";
+          }
+          else
+          {
+            updates['/batalla/' + $scope.batalla.clave + '/creadorAcerto'] = false;
+            $scope.mensaje.resultado = "Fallaste. Veremos tu oponente, espera su turno.";
+          }
         }
       }
       else
@@ -223,17 +399,58 @@ angular.module('starter.batalla', [])
         }
         else
         {
-          updates['/batalla/' + $scope.batalla.clave + '/turno/eleccionAcepta'] = parametro;
-          //Verifico
+          updates['/batalla/' + $scope.batalla.clave + '/turno'] = {
+            nombre:$scope.batalla.usuarioCreador.nombre, 
+            correo:$scope.batalla.usuarioCreador.correo,
+            creador: true,
+            ronda: ronda
+          };
+          updates['/batalla/' + $scope.batalla.clave + '/eleccionAcepta'] = $scope.batalla.eleccion + parametro + ",";
+          
+          if ($scope.batalla.creadorAcerto == true)
+          { 
+            if (parseInt(parametro) == parseInt($scope.batalla.barcoCreador))
+            {
+              updates['/batalla/' + $scope.batalla.clave + '/resultado'] = "Empataron";    
+              $scope.mensaje.resultado = "Acertaste, pero tu oponente tambien, Empataron.";
+            }
+            else
+            {
+              updates['/batalla/' + $scope.batalla.clave + '/resultado'] = "Ganó " + $scope.batalla.usuarioCreador.nombre;      
+              $scope.mensaje.resultado = "Fallaste y tu oponente no, Perdiste.";
+              update['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) + $scope.batalla.apuesta;
+              update['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) - $scope.batalla.apuesta;
+            }
+            updates['/batalla/' + $scope.batalla.clave + '/finalizada'] = true;      
+            updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
+            updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
+            updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
+            updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
+          }
+          else
+          {
+            if (parseInt(parametro) == parseInt($scope.batalla.barcoCreador))
+            {
+              updates['/batalla/' + $scope.batalla.clave + '/resultado'] = "Ganó " + $scope.batalla.usuarioAcepta.nombre;      
+              updates['/batalla/' + $scope.batalla.clave + '/finalizada'] = true;
+              update['/usuario/' + $scope.batalla.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) - $scope.batalla.apuesta;
+              update['/usuario/' + $scope.batalla.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) + $scope.batalla.apuesta;
+              updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
+              updates['/reserva/' + $scope.batalla.usuarioCreador.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
+              updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/monto'] = 0;
+              updates['/reserva/' + $scope.batalla.usuarioAcepta.nombre + '/' + $scope.batalla.clave + '/vencido'] = true;
+              $scope.mensaje.resultado = "Acertaste y tu oponente no, Ganaste.";        
+            }
+          }
         }
       }
 
       Servicio.Editar(updates);   
       $scope.mensaje.ver = true;
-      $scope.mensaje.mensaje = "Elección guardado. Esperando oponente.";
+      $scope.mensaje.mensaje = $scope.mensaje.resultado;
       $timeout(function(){
         $state.go('menu');
-      }, 1000);
+      }, 3000);
 
     // }
     // catch(error)

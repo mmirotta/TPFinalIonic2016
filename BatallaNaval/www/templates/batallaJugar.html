@@ -8,10 +8,17 @@
   </ion-header-bar>
   <ion-content style="background-color:#3EA1CF">
   	<div class="padding" >
-	    <a ng-click="Elegir(1)"><img src="img/barco.png" class="buttonJuego"></a>
-	    <a ng-click="Elegir(2)"><img src="img/barco.png" class="buttonJuego"></a>
-	    <a ng-click="Elegir(3)"><img src="img/barco.png" class="buttonJuego"></a>
-	    <a ng-click="Elegir(4)"><img src="img/barco.png" class="buttonJuego"></a>
+	    <a ng-click="Elegir(1)" ng-if="imagenes.habilitarBarco1"><img src="{{imagenes.barco1}}" class="buttonJuego"></a>
+	    <img src="{{imagenes.barco1}}" class="buttonJuego" ng-if="!imagenes.habilitarBarco1">
+
+	    <a ng-click="Elegir(2)" ng-if="imagenes.habilitarBarco2"><img src="{{imagenes.barco2}}" class="buttonJuego"></a>
+	    <img src="{{imagenes.barco2}}" class="buttonJuego" ng-if="!imagenes.habilitarBarco2">
+	    
+	    <a ng-click="Elegir(3)" ng-if="imagenes.habilitarBarco3"><img src="{{imagenes.barco3}}" class="buttonJuego"></a>
+	    <img src="{{imagenes.barco3}}" class="buttonJuego" ng-if="!imagenes.habilitarBarco3">
+	    
+	    <a ng-click="Elegir(4)" ng-if="imagenes.habilitarBarco1"><img src="{{imagenes.barco4}}" class="buttonJuego"></a>
+	    <img src="{{imagenes.barco4}}" class="buttonJuego" ng-if="!imagenes.habilitarBarco4">
 	</div>
 	<div class="padding" >
 	    <div class="padding alert-success sombra">
