@@ -166,6 +166,8 @@ angular.module('starter.batalla', [])
     
       $scope.batalla = JSON.parse($stateParams.batalla);
 
+      console.info($scope.batalla);
+
       if ($scope.batalla.finalizada == false)
       {
         Servicio.Cargar('/usuario/' + $scope.batalla.usuarioCreador.nombre).on('value',
@@ -368,8 +370,7 @@ angular.module('starter.batalla', [])
             ronda: ronda,
           };
           if (ronda == 1)
-          {
-            updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = parametro + ",";}
+            updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = parametro + ",";
           else
             updates['/batalla/' + $scope.batalla.clave + '/eleccionCreador'] = $scope.batalla.eleccionCreador + parametro + ",";
 
@@ -401,12 +402,6 @@ angular.module('starter.batalla', [])
         }
         else
         {
-          updates['/batalla/' + $scope.batalla.clave + '/turno'] = {
-            nombre:$scope.batalla.usuarioCreador.nombre, 
-            correo:$scope.batalla.usuarioCreador.correo,
-            creador: true,
-            ronda: ronda
-          };
           if (ronda == 2)
             updates['/batalla/' + $scope.batalla.clave + '/eleccionAcepta'] = parametro + ",";
           else
@@ -449,6 +444,12 @@ angular.module('starter.batalla', [])
             else
             {
               $scope.mensaje.resultado = "Fallaste. Veremos tu oponente, espera su turno.";
+              updates['/batalla/' + $scope.batalla.clave + '/turno'] = {
+                nombre:$scope.batalla.usuarioCreador.nombre, 
+                correo:$scope.batalla.usuarioCreador.correo,
+                creador: true,
+                ronda: ronda
+              };
             }
           }
         }
