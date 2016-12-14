@@ -65,15 +65,13 @@ angular.module('starter.login', [])
       $scope.mensajeLogin = {};
       $scope.mensajeLogin.ver = false;
       firebase.auth().signOut().catch(function (error){
-          $scope.mensajeLogin.ver = true;
-          $scope.ingresando = false;
-          $scope.mensajeLogin.mensaje = "No se pudo salir de la aplicación, intente nuevamente.";
-          $scope.mensajeLogin.estilo = "alert-danger";
+          console.info("Ha ocurrido un error en Deslogueo(). " + error);
       }).then( function(resultado){
-        $timeout(function() {
-          FactoryUsuario.Logueado = null;
-          $state.go("login");
-        });
+          $scope.mensajeLogin.ver = true;
+          $scope.mensajeLogin.mensaje = "Gracias por utilizar la aplicación.";
+          $timeout(function() {
+            ionic.Platform.exitApp();
+          }, 1000);
       });
     }
     catch (error)

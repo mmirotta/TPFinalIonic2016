@@ -1,13 +1,14 @@
 <ion-view view-title="Login">
   <ion-header-bar>
     <div class="bar bar-header" style="background-color:#2A6A88">
-    <button class="button button-clear button-positive" style="color:#FFFFFF" ng-click="Menu()">Menu</button>
-  </div>
+      <button class="button button-icon icon ion-reply" style="color:#000000" ng-click="Volver()"></button>
+      <h3 style="width:100%; color:#000000; margin-top:0px">Volver</h3>
+    </div>
   </ion-header-bar>
   <ion-content style="background-color:#3EA1CF">
     <form>
-      <div class="padding">
-        <div class="{{mensajeLogin.estilo}}" ng-if="mensajeLogin.ver" style="text-align:center">
+      <div class="overlay" ng-if="mensajeLogin.ver">
+        <div class="overlayContent">
           <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{mensajeLogin.mensaje}}</span>
         </div>
       </div>
