@@ -190,17 +190,20 @@ angular.module('starter.desafio', [])
       {
         updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = false;
         updateDesafio['/desafio/' + $scope.desafio.titulo + '/empate'] = true;
+        updateDesafio['/desafio/' + $scope.desafio.titulo + '/resultado'] = "Empataron";
       }
       else
       {
         if (eleccion == 'creador')
         {
+          updateDesafio['/desafio/' + $scope.desafio.titulo + '/resultado'] = "Ganó " + $scope.usuarioCreador.nombre;
           updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = $scope.usuarioCreador;
           updateDesafio['/usuario/' + $scope.desafio.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) + $scope.desafio.apuesta;
           updateDesafio['/usuario/' + $scope.desafio.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) - $scope.desafio.apuesta;
         }
         else
         {
+          updateDesafio['/desafio/' + $scope.desafio.titulo + '/resultado'] = "Ganó " + $scope.usuarioAcepta.nombre
           updateDesafio['/desafio/' + $scope.desafio.titulo + '/usuarioGanador'] = $scope.usuarioAcepta;
           updateDesafio['/usuario/' + $scope.desafio.usuarioCreador.nombre + '/saldo'] = parseInt($scope.usuarioCreador.saldo) - $scope.desafio.apuesta;
           updateDesafio['/usuario/' + $scope.desafio.usuarioAcepta.nombre + '/saldo'] = parseInt($scope.usuarioAcepta.saldo) + $scope.desafio.apuesta;

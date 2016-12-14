@@ -1,10 +1,26 @@
 <ion-view view-title="Mis Desafíos">
   <ion-content style="background-color:#A4A4A4; color:#FFFFFF">
+  	<div class="list">
+      <div class="item item-input">
+        <div class="input-label" style="width:50%">
+          Buscar por
+        </div>
+        <div class="input-select" style="width:50%; text-align:right">
+          <select style="margin-top:12px" ng-model="buscar.filtro">
+            <option value="Activas">Activas</option>
+            <option value="Finalizadas">Finalizadas</option>
+            <option value="Expiradas">Expiradas</option>
+          </select>
+          <button class="button button-icon icon ion-search" ng-click="Busqueda()"></button>
+        </div>
+      </div>
+    </div>
     <ion-list>
       <a class="item" style="background-color:#A4A4A4; color:#FFFFFF" ng-repeat="desafio in desafios" ng-click="VerDesafio({{desafio}})">
         <h4 style="width:100%; color:#000000; font-size: 20px">{{desafio.titulo}}</h4>
         <span style="width:100%; color:#FFFFFF; font-size: 16px">{{desafio.descripcion}}</span>
-    	<span style="width:100%; color:#FFFFFF; font-size: 16px">Resultado: {{desafio.resultado}} - Apuesta {{desafio.apuesta}}</span>
+    	<span style="width:100%; color:#FFFFFF; font-size: 16px">Apuesta {{desafio.apuesta}}</span>
+    	<span style="width:100%; color:#FFFFFF; font-size: 16px">Resultado: {{desafio.resultado}}</span>
       </a class="item" style="background-color:#A4A4A4; color:#FFFFFF">
     </ion-list>
   </ion-content>

@@ -1,0 +1,19 @@
+<ion-view view-title="Login">
+  <ion-header-bar style="background-color:#419D5F" >
+    <button class="button button-icon icon ion-reply" style="color:#000000" ng-click="Volver()"></button>
+    <h3 style="width:100%; color:#000000; margin-top:0px">Volver</h3>
+  </ion-header-bar>
+  <ion-content style="background-color:#A4A4A4">
+    <form>
+      <div class="overlay" ng-if="mensajeLogin.ver">
+        <div class="overlayContent">
+          <span class="input-label" style="font-size: 16px; width: 100%; max-width: 100%;">{{mensajeLogin.mensaje}}</span>
+        </div>
+      </div>
+      <div class="padding">
+          <p style="font-size: 16px; color: #FFFFFF">¿Confirma que quiere salir?</p>
+          <button class="button button-block button-assertive" ng-click="Deslogear()" >Salir</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

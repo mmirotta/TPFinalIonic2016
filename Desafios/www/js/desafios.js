@@ -80,7 +80,10 @@ angular.module('starter.desafios', [])
     }
 
     $scope.desafios = [];
-
+    $scope.buscar = {};
+    $scope.buscar.filtro = "Activas";
+    $scope.buscando = false;
+    
     var referenciaDesafios = firebase.database().ref('desafio/');
     referenciaDesafios.on('child_added', function (snapshot) {
       $timeout(function() {
@@ -88,32 +91,28 @@ angular.module('starter.desafios', [])
         desafio.pagina = "misDesafios";
         if (desafio.usuarioCreador.nombre == $scope.usuario.nombre || desafio.usuarioAcepta.nombre == $scope.usuario.nombre)
         {
-          if (desafio.usuarioGanador != null)
+          switch ($scope.buscar.filtro)
           {
-            if (desafio.usuarioGanador.nombre == $scope.usuario.nombre)
-            {
-              desafio.resultado = "Ganaste";
-            }
-            else if (empate == true)
-            {
-              desafio.resultado = "Empataste";
-            }
-            else
-            {
-              desafio.resultado = "Perdiste"
-            }
-          }
-          else
-          {
-            if (desafio.expirada == true)
-              desafio.resultado = "Expirada";
-            else
-              desafio.resultado = "Esperando desafiante";
-          }
+            case "Activas":
+              if (desafio.aceptada == true && desafio.finalizada == false && desafio.expirada == false)
+                $scope.desafios.push(desafio);
+              break;
 
-          $scope.desafios.push(desafio);
+            case "Finalizadas":
+              if (desafio.aceptada == false && desafio.finalizada == true && desafio.expirada == false)
+                $scope.desafios.push(desafio);
+              break;
+
+            case "Expirada":
+              if (desafio.expirada == true)
+              {
+                desafio.resultado = "Expirada";
+                $scope.desafios.push(desafio);
+              }
+
+              break;
+          }
         }        
-        console.info(desafio);
       });
     });
   }
@@ -121,6 +120,50 @@ angular.module('starter.desafios', [])
   {
     console.info("Ha ocurrido un error en MisDesafiosCtrl. " + error);
   }
+
+  $scope.Busqueda = function(){
+    try
+    {
+      $scope.buscando = true;
+      $scope.desafios = [];
+      var referenciaDesafios = firebase.database().ref('desafio/');
+      referenciaDesafios.on('child_added', function (snapshot) {
+        $timeout(function() {
+          var desafio = snapshot.val();
+          desafio.pagina = "misDesafios";
+          if (desafio.usuarioCreador.nombre == $scope.usuario.nombre || desafio.usuarioAcepta.nombre == $scope.usuario.nombre)
+          {
+            switch ($scope.buscar.filtro)
+            {
+              case "Activas":
+                if (desafio.aceptada == true && desafio.finalizada == false && desafio.expirada == false)
+                  $scope.desafios.push(desafio);
+                break;
+
+              case "Finalizadas":
+                if (desafio.aceptada == false && desafio.finalizada == true && desafio.expirada == false)
+                  $scope.desafios.push(desafio);
+                break;
+
+              case "Expirada":
+                if (desafio.expirada == true)
+                {
+                  desafio.resultado = "Expirada";
+                  $scope.desafios.push(desafio);
+                }
+
+                break;
+            }
+          }        
+        });
+      });
+      $scope.buscando = false;
+    }
+    catch (error)
+    {
+      console.info("Ha ocurrido un error en MisBatallasCtrl-Buscar. " + error);
+    }
+  };
 
   $scope.NuevoDesafio = function(){
     $state.go('app.desafio');

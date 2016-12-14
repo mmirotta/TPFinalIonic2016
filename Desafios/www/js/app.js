@@ -40,18 +40,27 @@ angular.module('starter', ['ionic',
 
   .state('login', {
     url: '/login',
+    cache:false,
     templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
+  .state('loginSalir', {
+    url: '/loginSalir',
+    templateUrl: 'templates/loginSalir.html',
     controller: 'LoginCtrl'
   })
 
   .state('registro', {
     url: '/registro',
+    cache:false,
     templateUrl: 'templates/registro.html',
     controller: 'RegistroCtrl'
   })
 
   .state('app.listaUsuarios', {
       url: '/listaUsuarios',
+      cache:false,
       views: {
         'menuContent': {
           templateUrl: 'templates/listaUsuarios.html',
@@ -62,6 +71,7 @@ angular.module('starter', ['ionic',
 
   .state('app.verUsuario', {
     url: '/verUsuario/:usuario',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/verUsuario.html',
@@ -72,6 +82,7 @@ angular.module('starter', ['ionic',
 
   .state('app.perfil', {
     url: '/perfil',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/perfil.html',
@@ -82,6 +93,7 @@ angular.module('starter', ['ionic',
 
   .state('app.desafio', {
     url: '/desafio',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/desafio.html',
@@ -92,6 +104,7 @@ angular.module('starter', ['ionic',
 
   .state('app.desafioVer', {
     url: '/desafioVer/:desafio',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/desafioVer.html',
@@ -102,6 +115,7 @@ angular.module('starter', ['ionic',
 
   .state('app.salaDesafios', {
       url: '/salaDesafios',
+      cache:false,
       views: {
         'menuContent': {
           templateUrl: 'templates/salaDesafios.html',
@@ -112,6 +126,7 @@ angular.module('starter', ['ionic',
 
   .state('app.misDesafios', {
       url: '/misDesafios',
+      cache:false,
       views: {
         'menuContent': {
           templateUrl: 'templates/misDesafios.html',
@@ -122,6 +137,7 @@ angular.module('starter', ['ionic',
 
   .state('app.verificarDesafios', {
       url: '/verificarDesafios',
+      cache:false,
       views: {
         'menuContent': {
           templateUrl: 'templates/verificarDesafios.html',
@@ -132,6 +148,7 @@ angular.module('starter', ['ionic',
 
   .state('app.desafioVerificar', {
     url: '/desafioVerificar/:desafio',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/desafioVerificar.html',

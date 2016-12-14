@@ -65,18 +65,14 @@ angular.module('starter.login', [])
       $scope.mensajeLogin = {};
       $scope.mensajeLogin.ver = false;
       firebase.auth().signOut().catch(function (error){
-          $scope.mensajeLogin.ver = true;
-          $scope.ingresando = false;
-          $scope.mensajeLogin.mensaje = "No se pudo salir de la aplicación, intente nuevamente.";
-          $scope.mensajeLogin.estilo = "alert-danger";
+         console.info("Ha ocurrido un error en Deslogueo(). " + error);
       }).then( function(resultado){
         $timeout(function() {
-          $scope.logueado = 'no';
           $scope.mensajeLogin.ver = true;
-          $scope.ingresando = false;
           $scope.mensajeLogin.mensaje = "Gracias por utilizar la aplicación.";
-          $scope.mensajeLogin.estilo = "alert-success";
-          FactoryUsuario.Logueado = null;
+          $timeout(function() {
+            ionic.Platform.exitApp();
+          }, 1000);
         });
       });
     }
@@ -138,6 +134,13 @@ angular.module('starter.login', [])
       console.info("Ha ocurrido un error en VerificarMail(). " + error);
     }
   };
+
+  $scope.Volver = function()
+  {
+    $state.go("app.salaDesafios");
+  }
+
+
 })
 
 .controller('RegistroCtrl', function($scope, $stateParams, $timeout, $state, Servicio, FactoryUsuario) {
@@ -145,10 +148,18 @@ angular.module('starter.login', [])
   $scope.login.usuario = "jperez@gmail.com";
   $scope.login.clave = "123456";
   $scope.login.nombre = "Juan Perez";
+  
+  $scope.logueado = 'no';
+  $scope.verificado = 'no';
+
   $scope.mensajeLogin = {};
+  $scope.mensajeLogin.ver = false;
+
+  $scope.registrando = false;
 
   $scope.Registrar = function (){
     $scope.mensajeLogin.ver = false;
+    $scope.registrando = true;
     try
     {
     firebase.auth().createUserWithEmailAndPassword($scope.login.usuario, $scope.login.clave)
@@ -170,15 +181,11 @@ angular.module('starter.login', [])
           firebase.auth().currentUser.updateProfile({
             displayName: $scope.login.nombre,
           }).then(function() {  
-            Servicio.Cargar('/usuario/' + usuario.displayName).on('value',
-              function(respuesta) {
-                FactoryUsuario.Logueado = respuesta.val();
-              },
-              function(error) {
-                // body...
-              }
-            );
-            $state.go('app.perfil');
+              $timeout(function() {
+                $scope.logueado = 'si';
+                $scope.verificado = 'no';
+                $scope.registrando = false;
+              });
           }, function(error) {
             // An error happened.
           });
@@ -205,6 +212,30 @@ angular.module('starter.login', [])
       $scope.mensajeLogin.ver = true;
       $scope.mensajeLogin.estilo = "alert-danger";
       console.info("Ha ocurrido un error en Registrar(). " + error);
+    }
+  };
+
+  $scope.VerificarMail = function (){
+    try
+    {
+      firebase.auth().currentUser.sendEmailVerification().then(function(resultado){
+        $timeout(function() {
+          $scope.cartelVerificar = true;
+        });
+      }).catch(function (error){
+        $timeout(function() {
+          $scope.mensajeLogin.ver = true;
+          $scope.mensajeLogin.mensaje = "No se pudo enviar el mail, intente nuevamente.";
+          $scope.mensajeLogin.estilo = "alert-danger";
+        });
+      });
+    }
+    catch (error)
+    {
+      $scope.mensajeLogin.mensaje = "Ha ocurrido un error.";
+      $scope.mensajeLogin.ver = true;
+      $scope.mensajeLogin.estilo = "alert-danger";
+      console.info("Ha ocurrido un error en VerificarMail(). " + error);
     }
   };
 
