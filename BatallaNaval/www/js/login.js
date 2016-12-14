@@ -208,6 +208,11 @@ angular.module('starter.login', [])
       console.info("Ha ocurrido un error en Registrar(). " + error);
     }
   };
+
+  $scope.Volver = function()
+  {
+    $state.go("login");
+  }
 })
 
 .controller('ListaUsuariosCtrl', function($scope, $state, $timeout, Servicio) {
